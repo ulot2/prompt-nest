@@ -1,5 +1,8 @@
-import { PromptCard } from "./PromptCard";
-import { PromptModal } from "./PromptModal";
+// app/prompt/[id]/page.tsx
+
+interface PromptPageProps {
+  params: { id: string };
+}
 
 const prompts = [
   {
@@ -27,17 +30,10 @@ const prompts = [
   },
 ];
 
-export const PromptList = () => {
+export default function PromptPage({ params }: PromptPageProps) {
   return (
-    <div>
-      <div className="max-w-[900px] mx-auto mt-[2rem] flex justify-center gap-[2%] flex-wrap">
-        {prompts.map((prompt) => (
-          <div key={prompt.id} className="w-[45%] mb-[2%]">
-            <PromptCard prompt={prompt} />
-          </div>
-        ))}
-      </div>
-      <PromptModal prompt={prompts} />
-    </div>
+    <main className="p-6">
+      <div>fif</div>
+    </main>
   );
-};
+}

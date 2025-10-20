@@ -1,11 +1,17 @@
 import { Navbar } from "@/components/Navbar";
-import { Tags } from "@/components/ui/Tags";
+import { PromptList } from "@/components/PromptList";
+import { Categories } from "@/components/Categories";
+import { WebsiteDetails } from "@/components/WebsiteDetails";
+import { PromptModal } from "@/components/PromptModal";
 
 export default function Home() {
   return (
     <div className="">
       <Navbar />
-      <Tags />
+      <WebsiteDetails />
+      <Categories />
+      <PromptList />
+      {/* <PromptModal /> */}
     </div>
   );
 }
