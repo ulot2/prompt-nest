@@ -37,7 +37,6 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
     }
   };
 
-  // Close on Escape key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
