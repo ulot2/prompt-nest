@@ -1,9 +1,14 @@
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
+"use client";
+
+import { Login } from "@/components/Login";
+import { Signup } from "@/components/Signup";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const [activeTab, setActiveTab] = useState("login");
+
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex flex-col mt-[2rem] items-center h-screen">
       <div className="text-center mb-[1rem]">
         <h1 className="text-3xl font-bold">PromptNest</h1>
         <p className="text-gray-600">Join the AI prompt community</p>
@@ -12,46 +17,53 @@ export default function LoginPage() {
         <div className="bg-[#ececf0] py-[0.4rem] px-[0.8rem] rounded-lg flex justify-between">
           <button
             type="button"
-            className="text-[15px] bg-white w-[50%] rounded-lg p-[0.2rem] cursor-pointer"
+            className={`text-[15px] ${
+              activeTab === "login" ? "bg-white" : ""
+            } w-[50%] rounded-lg p-[0.2rem] cursor-pointer`}
+            onClick={() => setActiveTab("login")}
           >
             Login
           </button>
           <button
             type="button"
-            className="text-[15px] w-[50%] rounded-lg cursor-pointer"
+            className={`text-[15px] ${
+              activeTab === "signup" ? "bg-white" : ""
+            } w-[50%] rounded-lg p-[0.2rem] cursor-pointer`}
+            onClick={() => setActiveTab("signup")}
           >
             Sign Up
           </button>
         </div>
-        <div>
-          <p className="mt-[1rem] text-gray-400 text-center mb-[1rem]">
-            Welcome back! Sign in to your account
-          </p>
-          <div className="w-full flex justify-between">
-            <button
-              type="button"
-              className="flex justify-center items-center gap-[1rem] border border-gray-300 py-[0.5rem] px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
-            >
-              <FcGoogle />
-              <span>Google</span>
-            </button>
-            <button
-              type="button"
-              className="flex justify-center items-center gap-[1rem] border border-gray-300 px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
-            >
-              <FaGithub />
-              <span>Github</span>
-            </button>
-          </div>
-          <div className="flex items-center w-full max-w-xs mx-auto my-4">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="flex-shrink mx-4 text-xs font-medium tracking-wider text-gray-400 uppercase">
-              Or continue with
-            </span>
-            <div className="flex-grow border-t border-gray-300"></div>
-          </div>
-        </div>
+
+        {/* login */}
+        {activeTab === "login" ? <Login /> : <Signup />}
       </div>
+
+      {activeTab === "login" ? (
+        <footer className="py-[2rem]">
+          <p className="text-[#717182]">
+            {"Don't have an account?"}
+            <span
+              className="text-black font-semibold cursor-pointer hover:underline ml-[0.2rem]"
+              onClick={() => setActiveTab("signup")}
+            >
+              Sign Up
+            </span>
+          </p>
+        </footer>
+      ) : (
+        <footer className="py-[2rem]">
+          <p className="text-[#717182]">
+            Already an account?
+            <span
+              className="text-black font-semibold cursor-pointer hover:underline ml-[0.2rem]"
+              onClick={() => setActiveTab("login")}
+            >
+              Login
+            </span>
+          </p>
+        </footer>
+      )}
     </div>
   );
 }
