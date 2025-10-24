@@ -2,6 +2,7 @@
 
 import { Login } from "@/components/Login";
 import { Signup } from "@/components/Signup";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -10,7 +11,9 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col mt-[2rem] items-center h-screen">
       <div className="text-center mb-[1rem]">
-        <h1 className="text-3xl font-bold">PromptNest</h1>
+        <Link href="">
+          <h1 className="text-3xl font-bold">PromptNest</h1>
+        </Link>
         <p className="text-gray-600">Join the AI prompt community</p>
       </div>
       <div className="bg-white shadow-xl border-2 border-[#ececf0] w-[40%] px-[2rem] py-[1rem] rounded-xl">
