@@ -5,8 +5,16 @@ import Link from "next/link";
 import { IoIosLogIn, IoIosAdd } from "react-icons/io";
 import { SubmitPrompt } from "./SubmitPrompt";
 import { useState } from "react";
+import { Session } from "next-auth";
+import Image from "next/image";
+import { div } from "motion/react-client";
+import { logout } from "@/lib/actions/auth";
 
-export const Navbar = () => {
+interface NavbarProps {
+  session: Session | null;
+}
+
+export const Navbar = ({ session }: NavbarProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -22,18 +30,22 @@ export const Navbar = () => {
           </p>
         </div>
         <div className="flex gap-[4%]">
-          <Link href="/auth/login">
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="flex justify-center items-center gap-[5px] border border-gray-300 font-semibold w-[100px] p-[0.3rem] rounded-lg cursor-pointer transform  duration-200 hover:scale-105 hover:bg-[#e9ebef] transition"
-            >
-              <IoIosLogIn />
-              Login
-            </motion.button>
-          </Link>
+          {session?.user ? (
+            ""
+          ) : (
+            <Link href="/auth/login">
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="flex justify-center items-center gap-[5px] border border-gray-300 font-semibold w-[100px] p-[0.3rem] rounded-lg cursor-pointer transform  duration-200 hover:scale-105 hover:bg-[#e9ebef] transition"
+              >
+                <IoIosLogIn />
+                Login
+              </motion.button>
+            </Link>
+          )}
 
           <motion.button
             type="button"
@@ -46,6 +58,31 @@ export const Navbar = () => {
             <IoIosAdd />
             Submit prompt
           </motion.button>
+          <div>
+            {session?.user && (
+              <div className="flex gap-[10px] items-center">
+                <Link href="/user-info">
+                  <Image
+                    className="rounded-[50%]"
+                    src={session.user.image ?? ""}
+                    width={50}
+                    height={50}
+                    alt="avatar"
+                  />
+                </Link>
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  className="border border-gray-300 font-semibold w-[90px] h-[25px] rounded-lg cursor-pointer  duration-200 hover:scale-105 hover:bg-[#e9ebef] "
+                  onClick={() => logout()}
+                >
+                  Sign out
+                </motion.button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <SubmitPrompt isOpen={isModalOpen} closeModal={closeModal} />
