@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("login");
 
   return (
-    <div className="flex flex-col mt-[2rem] items-center h-screen">
+    <div className="flex flex-col justify-center mt-[2rem] items-center h-screen">
       <div className="text-center mb-[1rem]">
         <Link href="">
           <h1 className="text-3xl font-bold">PromptNest</h1>

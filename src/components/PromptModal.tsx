@@ -89,7 +89,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
 
             <div className="mt-[1.5rem] flex gap-[0.5rem]">
               <Image
-                src={prompt.img}
+                src="/images/user-alt-img.jpg"
                 width={45}
                 height={45}
                 alt="user-image"

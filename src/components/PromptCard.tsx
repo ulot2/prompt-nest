@@ -52,7 +52,7 @@ export const PromptCard = ({ prompt, setSelectedPrompt }: Prompt) => {
       <div className="flex justify-between items-center px-[1.2rem] py-[1rem]">
         <div className="flex items-center">
           <Image
-            src={prompt.img}
+            src="/images/user-alt-img.jpg"
             width={30}
             height={30}
             alt="user-image"
