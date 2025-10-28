@@ -1,0 +1,25 @@
+"use server";
+
+import { prisma } from "@/lib/db";
+import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
+
+export async function createPrompt(formData: FormData) {
+  const session = await auth();
+
+  await prisma.prompt.create({
+    data: {
+      title: formData.get("promptTitle") as string,
+      description: formData.get("promptDescription") as string,
+      fullPrompt: formData.get("fullPrompt") as string,
+      category: formData.get("promptCategory") as string,
+      tags: (formData.get("promptTags") as string)
+        .split(",")
+        .map((tag) => tag.trim()),
+      img: session?.user?.image || "/images/user-alt-img.jpg",
+      userName: session?.user?.name || "anonymous",
+      userId: session?.user?.id,
+    },
+  });
+  revalidatePath("/");
+}

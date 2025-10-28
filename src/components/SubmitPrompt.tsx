@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import { motion, AnimatePresence } from "motion/react";
+import { createPrompt } from "@/actions/actions";
+import { toast } from "react-hot-toast";
 
 type ModalProps = {
   isOpen: boolean;
@@ -10,6 +12,7 @@ type ModalProps = {
 };
 
 export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleInput = () => {
@@ -22,6 +25,25 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
   if (!isOpen) {
     return null;
   }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      await createPrompt(formData);
+      closeModal();
+      toast.success("Prompt submitted successfully!");
+    } catch (err) {
+      console.error("Error submitting prompt:", err);
+      toast.error("Failed to submit prompt.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -53,7 +75,7 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
             useful and well-documented!
           </p>
           {/* submit prompt form */}
-          <form className="mt-[1rem]">
+          <form onSubmit={handleSubmit} className="mt-[1rem]">
             <div>
               <label htmlFor="promptTitle" className="block font-semibold">
                 Title
@@ -109,8 +131,8 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
               </label>
               <input
                 type="text"
-                name="promptCategory"
-                id="promptCategory"
+                name="promptTags"
+                id="promptTags"
                 placeholder="E.g., email, professional, marketing"
                 className="w-full bg-[#ececf0] flex items-center placeholder:text-[14px] focus:outline-3 focus:outline-gray-300 shadow-sm  py-[0.3rem] pl-[0.5rem] mt-[0.3rem] mb-[1rem] gap-[10px] rounded-lg"
               />
@@ -125,10 +147,11 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
                 Cancel
               </button>
               <button
-                type="button"
+                type="submit"
+                disabled={isSubmitting}
                 className="bg-black text-white text-[14px] px-[10px] items-center gap-[2%] font-semibold  rounded-lg cursor-pointer transform  duration-200 hover:scale-105 transition"
               >
-                Submit Prompt
+                {isSubmitting ? "Submitting..." : "Submit Prompt"}
               </button>
             </div>
           </form>

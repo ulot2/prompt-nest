@@ -20,7 +20,7 @@ type Prompt = {
 
 export const PromptCard = ({ prompt, setSelectedPrompt }: Prompt) => {
   return (
-    <div className="w-full border border-gray-300 rounded-[1.2rem] bg-white hover:shadow-lg transition-shadow duration-200">
+    <div className="w-full h-[290px] border border-gray-300 rounded-[1.2rem] bg-white hover:shadow-lg transition-shadow duration-200">
       <div onClick={() => setSelectedPrompt(prompt)} className="cursor-pointer">
         <div className="px-[1.2rem] pt-[1.2rem] mb-[0.2rem] flex justify-between">
           <div className="bg-[#e6e7f7] border border-[#adb0f7] py-[0.1rem] px-[1rem] rounded-[200px]">
@@ -52,7 +52,11 @@ export const PromptCard = ({ prompt, setSelectedPrompt }: Prompt) => {
       <div className="flex justify-between items-center px-[1.2rem] py-[1rem]">
         <div className="flex items-center">
           <Image
-            src="/images/user-alt-img.jpg"
+            src={
+              prompt.img?.startsWith("http")
+                ? prompt.img
+                : "/images/user-alt-img.jpg"
+            }
             width={30}
             height={30}
             alt="user-image"

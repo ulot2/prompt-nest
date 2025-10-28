@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import { Navbar } from "@/components/Navbar";
 import { PromptList } from "@/components/PromptList";
 import { Categories } from "@/components/Categories";
-import { WebsiteDetails } from "@/components/WebsiteDetails";
+import WebsiteDetails from "@/components/WebsiteDetails";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +19,7 @@ export default async function Home() {
     <div className="">
       <Navbar session={session} />
       <WebsiteDetails />
-      <Categories />
+      {/* <Categories /> */}
       <PromptList prompts={prompts} />
     </div>
   );
