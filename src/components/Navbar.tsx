@@ -62,20 +62,23 @@ export const Navbar = ({ session }: NavbarProps) => {
             {session?.user && (
               <div className="flex gap-[10px] items-center">
                 <Link href="/user-info">
-                  <Image
-                    className="rounded-[50%]"
-                    src={session.user.image ?? ""}
-                    width={50}
-                    height={50}
-                    alt="avatar"
-                  />
+                  <div className="flex border border-gray-300 py-[0.3rem] px-[0.5rem] rounded-lg gap-[5px] items-center hover:bg-gray-100 transition cursor-pointer">
+                    <Image
+                      className="rounded-[50%]"
+                      src={session.user.image ?? ""}
+                      width={23}
+                      height={23}
+                      alt="avatar"
+                    />
+                    <span>Profile</span>
+                  </div>
                 </Link>
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 300 }}
-                  className="border border-gray-300 font-semibold w-[90px] h-[25px] rounded-lg cursor-pointer  duration-200 hover:scale-105 hover:bg-[#e9ebef] "
+                  className="border border-gray-300 w-[100px] py-[0.3rem] px-[1rem] rounded-lg gap-[5px] items-center hover:bg-gray-100 transition cursor-pointer"
                   onClick={() => logout()}
                 >
                   Sign out
