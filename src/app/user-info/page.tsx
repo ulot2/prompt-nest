@@ -2,10 +2,16 @@ import { auth } from "@/auth";
 import Image from "next/image";
 import { IoIosArrowRoundBack, IoIosAdd } from "react-icons/io";
 import { FaRegFileAlt } from "react-icons/fa";
+import { prisma } from "@/lib/db";
 import { PromptList } from "@/components/PromptList";
 
 export default async function UserInfo() {
   const session = await auth();
+  const prompts = await prisma.prompt.findMany({
+    where: {
+      userId: session?.user?.id,
+    },
+  });
   return (
     <div>
       <div className="border-b border-gray-300 bg-white">
@@ -44,7 +50,7 @@ export default async function UserInfo() {
             </p>
             <hr className="border-gray-300 mb-[0.8rem]" />
             <div>
-              <h2 className="text-[20px]">10</h2>
+              <h2 className="text-[20px]">{prompts.length}</h2>
               <p className="flex items-center text-[#848587]">
                 <FaRegFileAlt />
                 <span>Prompts</span>
@@ -53,7 +59,7 @@ export default async function UserInfo() {
           </div>
         </div>
       </div>
-      {/* <PromptList /> */}
+      <PromptList prompts={prompts} />
     </div>
   );
 }

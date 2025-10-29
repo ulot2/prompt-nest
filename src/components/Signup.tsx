@@ -1,7 +1,5 @@
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import { AiOutlineMail } from "react-icons/ai";
-import { GoLock } from "react-icons/go";
 import { login } from "@/lib/actions/auth";
 
 export const Signup = () => {

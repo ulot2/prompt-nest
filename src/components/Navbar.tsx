@@ -7,7 +7,6 @@ import { SubmitPrompt } from "./SubmitPrompt";
 import { useState } from "react";
 import { Session } from "next-auth";
 import Image from "next/image";
-import { div } from "motion/react-client";
 import { logout } from "@/lib/actions/auth";
 
 interface NavbarProps {
