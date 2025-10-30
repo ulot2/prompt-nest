@@ -23,3 +23,24 @@ export async function createPrompt(formData: FormData) {
   });
   revalidatePath("/");
 }
+
+export async function editPrompt(formData: FormData, promptId: number) {
+  await prisma.prompt.update({
+    where: { id: promptId },
+    data: {
+      title: formData.get("promptTitle") as string,
+      description: formData.get("promptDescription") as string,
+      fullPrompt: formData.get("fullPrompt") as string,
+      category: formData.get("promptCategory") as string,
+      tags: (formData.get("promptTags") as string)
+        .split(",")
+        .map((tag) => tag.trim()),
+    },
+  });
+}
+
+export async function deletePrompt(promptId: number) {
+  await prisma.prompt.delete({
+    where: { id: promptId },
+  });
+}

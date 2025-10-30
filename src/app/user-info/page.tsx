@@ -4,6 +4,7 @@ import { IoIosArrowRoundBack, IoIosAdd } from "react-icons/io";
 import { FaRegFileAlt } from "react-icons/fa";
 import { prisma } from "@/lib/db";
 import { PromptList } from "@/components/PromptList";
+import router from "next/dist/shared/lib/router/router";
 
 export default async function UserInfo() {
   const session = await auth();
@@ -59,7 +60,7 @@ export default async function UserInfo() {
           </div>
         </div>
       </div>
-      <PromptList prompts={prompts} />
+      <PromptList session={session} prompts={prompts} />
     </div>
   );
 }

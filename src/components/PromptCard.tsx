@@ -1,38 +1,80 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { VotingButtons } from "./VotingButtons";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { deletePrompt, editPrompt } from "@/actions/actions";
+import toast from "react-hot-toast";
+import { EditPrompt } from "./EditPromptModal";
+import { useRouter } from "next/dist/client/components/navigation";
 
 type PromptCardProps = {
   id: number;
   category: string;
   title: string;
   description: string;
+  fullPrompt: string;
   tags: string[];
   img: string;
   userName: string;
+  userId: string;
 };
 
 type Prompt = {
   prompt: PromptCardProps;
   setSelectedPrompt: React.Dispatch<React.SetStateAction<{}>>;
+  session: any;
 };
 
-export const PromptCard = ({ prompt, setSelectedPrompt }: Prompt) => {
+export const PromptCard = ({ prompt, setSelectedPrompt, session }: Prompt) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
+
+  const handleEdit = () => setIsEditing(true);
+  const handleClose = () => setIsEditing(false);
+
+  const handleDelete = async () => {
+    try {
+      await deletePrompt(prompt.id);
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to delete prompt");
+    }
+  };
+
   return (
     <div className="w-full h-[290px] border border-gray-300 rounded-[1.2rem] bg-white hover:shadow-lg transition-shadow duration-200">
-      <div onClick={() => setSelectedPrompt(prompt)} className="cursor-pointer">
-        <div className="px-[1.2rem] pt-[1.2rem] mb-[0.2rem] flex justify-between">
+      <div className="px-[1.2rem] pt-[1.2rem] mb-[0.2rem] flex justify-between">
+        <div className="flex gap-[0.5rem] items-center">
           <div className="bg-[#e6e7f7] border border-[#adb0f7] py-[0.1rem] px-[1rem] rounded-[200px]">
             <h1 className="text-[#343ad1] font-semibold text-[13px]">
               {prompt.category}
             </h1>
           </div>
-          <div className="flex items-center text-[#848587]">
-            <MdOutlineRemoveRedEye />
-            <span className="ml-[2px]">5689</span>
-          </div>
+          {session?.user?.id === prompt.userId && (
+            <div>
+              <button
+                className="border border-gray-300 px-[0.4rem] rounded-lg text-[12px] hover:bg-gray-100 transition cursor-pointer"
+                type="button"
+                onClick={handleEdit}
+              >
+                Edit
+              </button>
+              <button
+                className="border border-gray-300 px-[0.4rem] ml-[0.5rem] rounded-lg text-[12px] hover:bg-gray-100 transition cursor-pointer"
+                type="button"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
+        <div className="flex items-center text-[#848587]">
+          <MdOutlineRemoveRedEye />
+          <span className="ml-[2px]">5689</span>
+        </div>
+      </div>
+      <div onClick={() => setSelectedPrompt(prompt)} className="cursor-pointer">
         <div>
           <h1 className="px-[1.2rem]">{prompt.title}</h1>
         </div>
@@ -48,6 +90,7 @@ export const PromptCard = ({ prompt, setSelectedPrompt }: Prompt) => {
           ))}
         </div>
       </div>
+
       <hr className="border border-gray-100 " />
       <div className="flex justify-between items-center px-[1.2rem] py-[1rem]">
         <div className="flex items-center">
@@ -68,6 +111,13 @@ export const PromptCard = ({ prompt, setSelectedPrompt }: Prompt) => {
           <VotingButtons />
         </div>
       </div>
+      {isEditing && (
+        <EditPrompt
+          isOpen={isEditing}
+          closeModal={handleClose}
+          prompt={prompt}
+        />
+      )}
     </div>
   );
 };
