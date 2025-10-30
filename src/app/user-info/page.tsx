@@ -5,6 +5,7 @@ import { FaRegFileAlt } from "react-icons/fa";
 import { prisma } from "@/lib/db";
 import { PromptList } from "@/components/PromptList";
 import router from "next/dist/shared/lib/router/router";
+import { UserInfoHeader } from "@/components/UserInfoHeader";
 
 export default async function UserInfo() {
   const session = await auth();
@@ -15,21 +16,7 @@ export default async function UserInfo() {
   });
   return (
     <div>
-      <div className="border-b border-gray-300 bg-white">
-        <div className="w-full max-w-[900px] mx-auto flex justify-between items-center my-[0.5rem]">
-          <div className="flex items-center">
-            <IoIosArrowRoundBack />
-            <button type="button">Back to Home</button>
-          </div>
-          <button
-            type="button"
-            className="bg-black text-white p-[0.3rem] flex justify-center items-center gap-[2%] w-[160px] font-semibold  rounded-lg cursor-pointer transform  duration-200 hover:scale-105 hover:bg-[#2f3030] transition"
-          >
-            <IoIosAdd />
-            Submit prompt
-          </button>
-        </div>
-      </div>
+      <UserInfoHeader />
       <div className="w-full max-w-[600px] mx-auto bg-white mt-[2rem] p-[2rem] rounded-lg shadow-md">
         <div className="flex gap-[2rem]">
           <div className="h-[102px] rounded-[50%] w-[102px] border-4 border-white shadow-lg">

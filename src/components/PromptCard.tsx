@@ -27,17 +27,30 @@ type Prompt = {
 
 export const PromptCard = ({ prompt, setSelectedPrompt, session }: Prompt) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
   const handleEdit = () => setIsEditing(true);
   const handleClose = () => setIsEditing(false);
 
   const handleDelete = async () => {
-    try {
-      await deletePrompt(prompt.id);
-      router.refresh();
-    } catch (error) {
-      toast.error("Failed to delete prompt");
+    const confirm = window.confirm(
+      "Are you sure you want to delete this prompt?"
+    );
+    setIsDeleting(true);
+    if (!confirm) {
+      setIsDeleting(false);
+      return;
+    }
+    if (confirm) {
+      try {
+        await deletePrompt(prompt.id);
+        router.refresh();
+        toast.success("Prompt deleted successfully");
+        setIsDeleting(false);
+      } catch (error) {
+        toast.error("Failed to delete prompt");
+      }
     }
   };
 
@@ -64,12 +77,12 @@ export const PromptCard = ({ prompt, setSelectedPrompt, session }: Prompt) => {
                 type="button"
                 onClick={handleDelete}
               >
-                Delete
+                {isDeleting ? "Deleting..." : "Delete"}
               </button>
             </div>
           )}
         </div>
-        <div className="flex items-center text-[#848587]">
+        <div className="flex items-center text-[#848587] sr-only">
           <MdOutlineRemoveRedEye />
           <span className="ml-[2px]">5689</span>
         </div>

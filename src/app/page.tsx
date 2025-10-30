@@ -11,7 +11,12 @@ import WebsiteDetails from "@/components/WebsiteDetails";
 export default async function Home() {
   const session = await auth();
 
-  const prompts = await prisma.prompt.findMany();
+  const prompts = await prisma.prompt.findMany({
+    take: 20,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
     <div className="">
