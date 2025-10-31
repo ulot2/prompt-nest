@@ -7,13 +7,37 @@ import { PromptList } from "@/components/PromptList";
 import router from "next/dist/shared/lib/router/router";
 import { UserInfoHeader } from "@/components/UserInfoHeader";
 
-export default async function UserInfo() {
+const promptPerPage = 5;
+
+export default async function UserInfo({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth();
-  const prompts = await prisma.prompt.findMany({
+
+  const page = Number(searchParams.page) || 1;
+  const skip = (page - 1) * promptPerPage;
+
+  const totalPrompts = await prisma.prompt.count({
     where: {
       userId: session?.user?.id,
     },
   });
+
+  const prompts = await prisma.prompt.findMany({
+    where: {
+      userId: session?.user?.id,
+    },
+    take: promptPerPage,
+    skip: skip,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const totalPages = Math.ceil(totalPrompts / promptPerPage);
+
   return (
     <div>
       <UserInfoHeader />
@@ -38,7 +62,7 @@ export default async function UserInfo() {
             </p>
             <hr className="border-gray-300 mb-[0.8rem]" />
             <div>
-              <h2 className="text-[20px]">{prompts.length}</h2>
+              <h2 className="text-[20px]">{totalPrompts}</h2>
               <p className="flex items-center text-[#848587]">
                 <FaRegFileAlt />
                 <span>Prompts</span>
@@ -47,7 +71,12 @@ export default async function UserInfo() {
           </div>
         </div>
       </div>
-      <PromptList session={session} prompts={prompts} />
+      <PromptList
+        session={session}
+        prompts={prompts}
+        currentPage={page}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

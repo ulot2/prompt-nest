@@ -3,13 +3,18 @@
 import { useState } from "react";
 import { PromptCard } from "./PromptCard";
 import { PromptModal } from "./PromptModal";
+import { Pagination } from "./Pagination";
 
 export const PromptList = ({
   prompts,
   session,
+  currentPage,
+  totalPages,
 }: {
   prompts: any[];
   session: any;
+  currentPage: number;
+  totalPages: number;
 }) => {
   const [selectedPrompt, setSelectedPrompt] = useState<any | null>(null);
 
@@ -26,6 +31,9 @@ export const PromptList = ({
           </div>
         ))}
       </div>
+      {totalPages > 1 && (
+        <Pagination currentPage={currentPage} totalPages={totalPages} />
+      )}
       <PromptModal
         isOpen={!!selectedPrompt}
         onClose={() => setSelectedPrompt(null)}

@@ -6,6 +6,8 @@ import { IoCheckmark } from "react-icons/io5";
 import { FaRegCopy } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { format } from "path";
+import { formatTime } from "@/lib/utils";
 
 interface PromptModalProps {
   isOpen: boolean;
@@ -19,6 +21,7 @@ interface PromptModalProps {
     tags: string[];
     img: string;
     userName: string;
+    createdAt: string | Date;
   } | null;
 }
 
@@ -68,7 +71,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
                     chatgpt
                   </h1>
                 </div>
-                <p className="text-[#848587]">6 days ago</p>
+                <p className="text-[#848587]">{formatTime(prompt.createdAt)}</p>
               </div>
               <button
                 type="button"
