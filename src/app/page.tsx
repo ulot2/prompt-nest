@@ -9,6 +9,25 @@ import { FilterSidebar } from "@/components/FilterSidebar";
 import WebsiteDetails from "@/components/WebsiteDetails";
 import { unstable_cache as cache } from "next/cache";
 import { SearchPrompt } from "@/components/SearchPrompt";
+import { Suspense } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
+export default async function Home() {
+  return (
+    <div>
+      <Suspense
+        fallback={
+          <div className=" bg-black w-[200px] py-[0.5rem] flex justify-center items-center gap-2 mx-auto mt-[2rem] rounded-lg shadow-md">
+            <AiOutlineLoading3Quarters className="animate-spin text-[16px] text-white" />
+            <p className="text-white">Loading prompts...</p>
+          </div>
+        }
+      >
+        <GetPrompts searchParams={{}} />
+      </Suspense>
+    </div>
+  );
+}
 
 const promptPerPage = 5;
 
@@ -22,7 +41,7 @@ const getTotalUsers = cache(async () => prisma.user.count(), ["userCount"], {
   revalidate: 300,
 });
 
-export default async function Home({
+async function GetPrompts({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };

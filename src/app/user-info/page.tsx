@@ -1,15 +1,33 @@
 import { auth } from "@/auth";
 import Image from "next/image";
-import { IoIosArrowRoundBack, IoIosAdd } from "react-icons/io";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { prisma } from "@/lib/db";
 import { PromptList } from "@/components/PromptList";
-import router from "next/dist/shared/lib/router/router";
 import { UserInfoHeader } from "@/components/UserInfoHeader";
+import { Suspense } from "react";
+
+export default async function UserInfo() {
+  return (
+    <div>
+      <UserInfoHeader />
+      <Suspense
+        fallback={
+          <div className=" bg-black w-[200px] py-[0.5rem] flex justify-center items-center gap-2 mx-auto mt-[2rem] rounded-lg shadow-md">
+            <AiOutlineLoading3Quarters className="animate-spin text-[16px] text-white" />
+            <p className="text-white">Loading user details...</p>
+          </div>
+        }
+      >
+        <GetUserDetails searchParams={{}} />
+      </Suspense>
+    </div>
+  );
+}
 
 const promptPerPage = 5;
 
-export default async function UserInfo({
+async function GetUserDetails({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -40,7 +58,6 @@ export default async function UserInfo({
 
   return (
     <div>
-      <UserInfoHeader />
       <div className="w-full max-w-[600px] mx-auto bg-white mt-[2rem] p-[2rem] rounded-lg shadow-md">
         <div className="flex gap-[2rem]">
           <div className="h-[102px] rounded-[50%] w-[102px] border-4 border-white shadow-lg">
