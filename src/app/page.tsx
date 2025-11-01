@@ -5,9 +5,10 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { Navbar } from "@/components/Navbar";
 import { PromptList } from "@/components/PromptList";
-import { Categories } from "@/components/Categories";
+import { FilterSidebar } from "@/components/FilterSidebar";
 import WebsiteDetails from "@/components/WebsiteDetails";
 import { unstable_cache as cache } from "next/cache";
+import { SearchPrompt } from "@/components/SearchPrompt";
 
 const promptPerPage = 5;
 
@@ -48,17 +49,22 @@ export default async function Home({
   return (
     <div className="">
       <Navbar session={session} />
+      <SearchPrompt />
+
       <WebsiteDetails
         totalUsers={totalUsers}
         totalPrompts={totalPromptsCount}
       />
-      {/* <Categories /> */}
-      <PromptList
-        session={session}
-        prompts={prompts}
-        currentPage={page}
-        totalPages={totalPages}
-      />
+      <div className="flex">
+        <FilterSidebar />
+
+        <PromptList
+          session={session}
+          prompts={prompts}
+          currentPage={page}
+          totalPages={totalPages}
+        />
+      </div>
     </div>
   );
 }
