@@ -17,6 +17,8 @@ type PromptCardProps = {
   img: string;
   userName: string;
   userId: string;
+  votes: number;
+  createdAt: string;
 };
 
 type Prompt = {
@@ -121,7 +123,7 @@ export const PromptCard = ({ prompt, setSelectedPrompt, session }: Prompt) => {
           <p>{prompt.userName}</p>
         </div>
         <div>
-          <VotingButtons />
+          <VotingButtons promptId={prompt.id} initialVotes={prompt.votes} />
         </div>
       </div>
       {isEditing && (

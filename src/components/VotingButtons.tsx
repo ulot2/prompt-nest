@@ -1,24 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { BiUpvote } from "react-icons/bi";
 import { BiDownvote } from "react-icons/bi";
+import { updateVote } from "@/actions/actions";
 
-export const VotingButtons = () => {
-  const [voteCount, setVoteCount] = useState(0);
+type VotingButtonsProps = {
+  promptId: number;
+  initialVotes: number;
+};
+
+export const VotingButtons = ({
+  promptId,
+  initialVotes,
+}: VotingButtonsProps) => {
+  const [isPending, startTransition] = useTransition();
+  const [voteCount, setVoteCount] = useState(initialVotes);
   const [hasUpVoted, setHasUpVoted] = useState(false);
+  const [hasDownVoted, setHasDownVoted] = useState(false);
 
   const handleUpVote = () => {
     if (!hasUpVoted) {
-      setVoteCount(voteCount + 1);
       setHasUpVoted(true);
+      setHasDownVoted(false);
+      setVoteCount(voteCount + 1);
+
+      startTransition(() => {
+        updateVote(promptId, "up");
+      });
     }
   };
 
   const handleDownVote = () => {
-    if (hasUpVoted) {
-      setVoteCount(voteCount - 1);
+    if (!hasDownVoted) {
+      setHasDownVoted(true);
       setHasUpVoted(false);
+      setVoteCount(voteCount - 1);
+
+      startTransition(() => {
+        updateVote(promptId, "down");
+      });
     }
   };
 
@@ -30,6 +51,7 @@ export const VotingButtons = () => {
           hasUpVoted ? "text-[blue]" : "text-gray-500"
         }`}
         onClick={handleUpVote}
+        disabled={isPending}
       >
         <BiUpvote />
         <span className="sr-only">UpVote</span>
@@ -38,9 +60,10 @@ export const VotingButtons = () => {
       <button
         type="button"
         className={`text-[18px] hover:bg-[#e9ebef] p-[0.3rem] rounded-lg transition ${
-          !hasUpVoted ? "text-[red]" : "text-gray-500"
+          hasDownVoted ? "text-[red]" : "text-gray-500"
         }`}
         onClick={handleDownVote}
+        disabled={isPending}
       >
         <BiDownvote />
         <span className="sr-only">DownVote</span>
