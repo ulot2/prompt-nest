@@ -2,7 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { BiUpvote } from "react-icons/bi";
-import { BiDownvote } from "react-icons/bi";
+import {
+  AiOutlineLike,
+  AiOutlineDislike,
+  AiFillLike,
+  AiFillDislike,
+} from "react-icons/ai";
 import { updateVote } from "@/actions/actions";
 
 type VotingButtonsProps = {
@@ -15,7 +20,8 @@ export const VotingButtons = ({
   initialVotes,
 }: VotingButtonsProps) => {
   const [isPending, startTransition] = useTransition();
-  const [voteCount, setVoteCount] = useState(initialVotes);
+  const [upVoteCount, setUpVoteCount] = useState(0);
+  const [downVoteCount, setDownVoteCount] = useState(0);
   const [hasUpVoted, setHasUpVoted] = useState(false);
   const [hasDownVoted, setHasDownVoted] = useState(false);
 
@@ -23,11 +29,11 @@ export const VotingButtons = ({
     if (!hasUpVoted) {
       setHasUpVoted(true);
       setHasDownVoted(false);
-      setVoteCount(voteCount + 1);
+      setUpVoteCount(upVoteCount + 1);
 
-      startTransition(() => {
-        updateVote(promptId, "up");
-      });
+      // startTransition(() => {
+      //   updateVote(promptId, "up");
+      // });
     }
   };
 
@@ -35,38 +41,49 @@ export const VotingButtons = ({
     if (!hasDownVoted) {
       setHasDownVoted(true);
       setHasUpVoted(false);
-      setVoteCount(voteCount - 1);
+      setDownVoteCount(downVoteCount + 1);
 
-      startTransition(() => {
-        updateVote(promptId, "down");
-      });
+      // startTransition(() => {
+      //   updateVote(promptId, "down");
+      // });
     }
   };
 
   return (
-    <div className="flex items-center gap-[10px]">
+    <div className="flex items-center gap-[20px]">
       <button
         type="button"
-        className={`text-[18px] hover:bg-[#e9ebef] p-[0.3rem] rounded-lg transition ${
-          hasUpVoted ? "text-[blue]" : "text-gray-500"
-        }`}
+        className={`flex items-center gap-[5px] ${
+          hasUpVoted ? "bg-gray-100" : ""
+        } hover:bg-gray-100 p-[0.4rem] rounded-lg cursor-pointer transition`}
         onClick={handleUpVote}
-        disabled={isPending}
       >
-        <BiUpvote />
-        <span className="sr-only">UpVote</span>
+        {hasUpVoted ? (
+          <AiFillLike className="text-[20px]" />
+        ) : (
+          <AiOutlineLike className="text-[20px]" />
+        )}
+        <span className="text-[14px] font-semibold">{upVoteCount}</span>
       </button>
-      <p>{voteCount}</p>
       <button
         type="button"
-        className={`text-[18px] hover:bg-[#e9ebef] p-[0.3rem] rounded-lg transition ${
-          hasDownVoted ? "text-[red]" : "text-gray-500"
-        }`}
+        className={`flex items-center gap-[5px] ${
+          hasDownVoted ? "bg-red-100" : ""
+        } hover:bg-gray-100 p-[0.4rem] rounded-lg cursor-pointer transition`}
         onClick={handleDownVote}
-        disabled={isPending}
       >
-        <BiDownvote />
-        <span className="sr-only">DownVote</span>
+        {hasDownVoted ? (
+          <AiFillDislike className="text-[20px] text-red-600" />
+        ) : (
+          <AiOutlineDislike className="text-[20px]" />
+        )}
+        <span
+          className={`text-[14px] ${
+            hasDownVoted ? "font-semibold text-red-600" : ""
+          }`}
+        >
+          {downVoteCount}
+        </span>
       </button>
     </div>
   );
