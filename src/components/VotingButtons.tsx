@@ -8,44 +8,78 @@ import {
   AiFillLike,
   AiFillDislike,
 } from "react-icons/ai";
-import { updateVote } from "@/actions/actions";
+import { updateLike, updateDislike } from "@/actions/actions";
 
 type VotingButtonsProps = {
   promptId: number;
-  initialVotes: number;
+  initialLikes: number;
+  initialDislikes: number;
 };
 
 export const VotingButtons = ({
   promptId,
-  initialVotes,
+  initialLikes,
+  initialDislikes,
 }: VotingButtonsProps) => {
   const [isPending, startTransition] = useTransition();
-  const [upVoteCount, setUpVoteCount] = useState(0);
-  const [downVoteCount, setDownVoteCount] = useState(0);
+
+  const [likeCount, setLikeCount] = useState(initialLikes);
+  const [dislikeCount, setDislikeCount] = useState(initialDislikes);
+
   const [hasUpVoted, setHasUpVoted] = useState(false);
   const [hasDownVoted, setHasDownVoted] = useState(false);
 
   const handleUpVote = () => {
-    if (!hasUpVoted) {
+    if (hasUpVoted) {
+      setHasUpVoted(false);
+      setLikeCount(likeCount - 1);
+      startTransition(() => {
+        updateLike(promptId, -1);
+      });
+    } else {
       setHasUpVoted(true);
-      setHasDownVoted(false);
-      setUpVoteCount(upVoteCount + 1);
+      setLikeCount(likeCount + 1);
 
-      // startTransition(() => {
-      //   updateVote(promptId, "up");
-      // });
+      if (hasDownVoted) {
+        setHasDownVoted(false);
+        setDislikeCount(dislikeCount - 1);
+
+        startTransition(async () => {
+          await updateLike(promptId, 1);
+          await updateDislike(promptId, -1);
+        });
+      } else {
+        startTransition(() => {
+          updateLike(promptId, 1);
+        });
+      }
     }
   };
 
   const handleDownVote = () => {
-    if (!hasDownVoted) {
+    if (hasDownVoted) {
+      setHasDownVoted(false);
+      setDislikeCount(dislikeCount - 1);
+      startTransition(() => {
+        updateDislike(promptId, -1);
+      });
+    } else {
       setHasDownVoted(true);
-      setHasUpVoted(false);
-      setDownVoteCount(downVoteCount + 1);
+      setDislikeCount(dislikeCount + 1);
 
-      // startTransition(() => {
-      //   updateVote(promptId, "down");
-      // });
+      if (hasUpVoted) {
+        setHasUpVoted(false);
+        setLikeCount(likeCount - 1);
+
+        startTransition(async () => {
+          await updateLike(promptId, -1);
+          await updateDislike(promptId, 1);
+        });
+      } else {
+        startTransition(() => {
+          updateDislike(promptId, 1);
+        });
+      }
     }
   };
 
@@ -57,13 +91,14 @@ export const VotingButtons = ({
           hasUpVoted ? "bg-gray-100" : ""
         } hover:bg-gray-100 p-[0.4rem] rounded-lg cursor-pointer transition`}
         onClick={handleUpVote}
+        disabled={isPending}
       >
         {hasUpVoted ? (
           <AiFillLike className="text-[20px]" />
         ) : (
           <AiOutlineLike className="text-[20px]" />
         )}
-        <span className="text-[14px] font-semibold">{upVoteCount}</span>
+        <span className="text-[14px] font-semibold">{likeCount}</span>
       </button>
       <button
         type="button"
@@ -71,6 +106,7 @@ export const VotingButtons = ({
           hasDownVoted ? "bg-red-100" : ""
         } hover:bg-gray-100 p-[0.4rem] rounded-lg cursor-pointer transition`}
         onClick={handleDownVote}
+        disabled={isPending}
       >
         {hasDownVoted ? (
           <AiFillDislike className="text-[20px] text-red-600" />
@@ -82,7 +118,7 @@ export const VotingButtons = ({
             hasDownVoted ? "font-semibold text-red-600" : ""
           }`}
         >
-          {downVoteCount}
+          {dislikeCount}
         </span>
       </button>
     </div>

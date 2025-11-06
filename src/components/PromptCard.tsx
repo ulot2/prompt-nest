@@ -19,6 +19,8 @@ type PromptCardProps = {
   userId: string;
   votes: number;
   createdAt: string;
+  likes: number;
+  dislikes: number;
 };
 
 type Prompt = {
@@ -123,7 +125,11 @@ export const PromptCard = ({ prompt, setSelectedPrompt, session }: Prompt) => {
           <p>{prompt.userName}</p>
         </div>
         <div>
-          <VotingButtons promptId={prompt.id} initialVotes={prompt.votes} />
+          <VotingButtons
+            promptId={prompt.id}
+            initialLikes={prompt.likes} // <-- Pass the like count
+            initialDislikes={prompt.dislikes}
+          />
         </div>
       </div>
       {isEditing && (

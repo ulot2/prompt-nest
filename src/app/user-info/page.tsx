@@ -44,6 +44,20 @@ async function GetUserDetails({
   });
 
   const prompts = await prisma.prompt.findMany({
+    select: {
+      likes: true,
+      dislikes: true,
+      id: true,
+      category: true,
+      title: true,
+      description: true,
+      fullPrompt: true,
+      tags: true,
+      img: true,
+      userName: true,
+      userId: true,
+      createdAt: true,
+    },
     where: {
       userId: session?.user?.id,
     },

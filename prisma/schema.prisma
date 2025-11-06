@@ -54,7 +54,8 @@ model Prompt {
   img         String
   userName    String
   createdAt   DateTime @default(now())
-  votes       Int      @default(0)
+  likes       Int      @default(0)
+  dislikes    Int      @default(0)
   userId      String?
   user        User?    @relation(fields: [userId], references: [id])
 }

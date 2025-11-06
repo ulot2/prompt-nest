@@ -56,6 +56,20 @@ async function GetPrompts({
   const totalPrompts = await prisma.prompt.count();
 
   const prompts = await prisma.prompt.findMany({
+    select: {
+      likes: true,
+      dislikes: true,
+      id: true,
+      category: true,
+      title: true,
+      description: true,
+      fullPrompt: true,
+      tags: true,
+      img: true,
+      userName: true,
+      userId: true,
+      createdAt: true,
+    },
     take: promptPerPage,
     skip: (page - 1) * promptPerPage,
     orderBy: {

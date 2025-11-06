@@ -45,30 +45,26 @@ export async function deletePrompt(promptId: number) {
   });
 }
 
-export async function updateVote(promptId: number, voteType: "up" | "down") {
-  try {
-    if (voteType === "up") {
-      await prisma.prompt.update({
-        where: { id: promptId },
-        data: {
-          votes: {
-            increment: 1,
-          },
-        },
-      });
-    } else if (voteType === "down") {
-      await prisma.prompt.update({
-        where: { id: promptId },
-        data: {
-          votes: {
-            decrement: 1,
-          },
-        },
-      });
-    }
-    revalidatePath("/");
-  } catch (error) {
-    console.error("Failed to update vote:", error);
-    throw new Error("Could not update vote.");
-  }
+export async function updateLike(promptId: number, change: 1 | -1) {
+  await prisma.prompt.update({
+    where: { id: promptId },
+    data: {
+      likes: {
+        increment: change,
+      },
+    },
+  });
+  revalidatePath("/");
+}
+
+export async function updateDislike(promptId: number, change: 1 | -1) {
+  await prisma.prompt.update({
+    where: { id: promptId },
+    data: {
+      dislikes: {
+        increment: change,
+      },
+    },
+  });
+  revalidatePath("/");
 }
