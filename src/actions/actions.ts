@@ -45,26 +45,69 @@ export async function deletePrompt(promptId: number) {
   });
 }
 
-export async function updateLike(promptId: number, change: 1 | -1) {
-  await prisma.prompt.update({
-    where: { id: promptId },
-    data: {
-      likes: {
-        increment: change,
-      },
-    },
-  });
-  revalidatePath("/");
-}
+export async function updateUserVote(
+  promptId: number,
+  newVoteType: "LIKE" | "DISLIKE" | "NONE"
+) {
+  const session = await auth();
+  const userId = session?.user?.id;
 
-export async function updateDislike(promptId: number, change: 1 | -1) {
-  await prisma.prompt.update({
-    where: { id: promptId },
-    data: {
-      dislikes: {
-        increment: change,
+  if (!userId) {
+    throw new Error("User must be logged in to vote.");
+  }
+
+  const existingVote = await prisma.vote.findUnique({
+    where: {
+      userId_promptId: {
+        userId,
+        promptId,
       },
     },
   });
+
+  await prisma.$transaction(async (tx) => {
+    if (existingVote) {
+      await tx.vote.delete({
+        where: { id: existingVote.id },
+      });
+
+      if (existingVote.type === "LIKE") {
+        await tx.prompt.update({
+          where: { id: promptId },
+          data: { likes: { decrement: 1 } },
+        });
+      } else if (existingVote.type === "DISLIKE") {
+        await tx.prompt.update({
+          where: { id: promptId },
+          data: { dislikes: { decrement: 1 } },
+        });
+      }
+    }
+
+    if (newVoteType !== "NONE") {
+      if (!existingVote || existingVote.type !== newVoteType) {
+        await tx.vote.create({
+          data: {
+            userId,
+            promptId,
+            type: newVoteType,
+          },
+        });
+
+        if (newVoteType === "LIKE") {
+          await tx.prompt.update({
+            where: { id: promptId },
+            data: { likes: { increment: 1 } },
+          });
+        } else if (newVoteType === "DISLIKE") {
+          await tx.prompt.update({
+            where: { id: promptId },
+            data: { dislikes: { increment: 1 } },
+          });
+        }
+      }
+    }
+  });
+
   revalidatePath("/");
 }

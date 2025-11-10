@@ -47,12 +47,12 @@ async function GetPrompts({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const session = await auth();
+  const userId = session?.user?.id;
 
   const totalUsers = await getTotalUsers();
   const totalPromptsCount = await getTotalPrompts();
 
   const page = Number(searchParams.page) || 1;
-
   const totalPrompts = await prisma.prompt.count();
 
   const prompts = await prisma.prompt.findMany({
@@ -69,6 +69,12 @@ async function GetPrompts({
       userName: true,
       userId: true,
       createdAt: true,
+      votes: userId
+        ? {
+            where: { userId },
+            select: { type: true },
+          }
+        : true,
     },
     take: promptPerPage,
     skip: (page - 1) * promptPerPage,
@@ -76,8 +82,12 @@ async function GetPrompts({
       createdAt: "desc",
     },
   });
-
   const totalPages = Math.ceil(totalPrompts / promptPerPage);
+
+  const promptsWithStatus = prompts.map((prompt) => ({
+    ...prompt,
+    userVoteStatus: prompt.votes.length > 0 ? prompt.votes[0].type : null,
+  }));
 
   return (
     <div className="">
@@ -93,7 +103,7 @@ async function GetPrompts({
 
         <PromptList
           session={session}
-          prompts={prompts}
+          prompts={promptsWithStatus}
           currentPage={page}
           totalPages={totalPages}
         />

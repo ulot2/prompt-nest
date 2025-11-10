@@ -21,18 +21,27 @@ type PromptCardProps = {
   createdAt: string;
   likes: number;
   dislikes: number;
+  userVoteStatus: "LIKE" | "DISLIKE" | null;
 };
 
 type Prompt = {
   prompt: PromptCardProps;
   setSelectedPrompt: React.Dispatch<React.SetStateAction<{}>>;
   session: any;
+  userVoteStatus: "LIKE" | "DISLIKE" | null;
 };
 
-export const PromptCard = ({ prompt, setSelectedPrompt, session }: Prompt) => {
+export const PromptCard = ({
+  prompt,
+  setSelectedPrompt,
+  session,
+  userVoteStatus,
+}: Prompt) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
+
+  const isLoggedIn = !!session?.user;
 
   const handleEdit = () => setIsEditing(true);
   const handleClose = () => setIsEditing(false);
@@ -127,8 +136,10 @@ export const PromptCard = ({ prompt, setSelectedPrompt, session }: Prompt) => {
         <div>
           <VotingButtons
             promptId={prompt.id}
-            initialLikes={prompt.likes} // <-- Pass the like count
+            initialLikes={prompt.likes}
             initialDislikes={prompt.dislikes}
+            userVoteStatus={prompt.userVoteStatus}
+            isLoggedIn={isLoggedIn}
           />
         </div>
       </div>

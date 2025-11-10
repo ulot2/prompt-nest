@@ -42,6 +42,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   prompts       Prompt[]
+  votes         Vote[]
 }
 
 model Prompt {
@@ -58,6 +59,18 @@ model Prompt {
   dislikes    Int      @default(0)
   userId      String?
   user        User?    @relation(fields: [userId], references: [id])
+  votes       Vote[]
+}
+
+model Vote {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  promptId Int
+  type     String
+  user     User   @relation(fields: [userId], references: [id])
+  prompt   Prompt @relation(fields: [promptId], references: [id])
+
+  @@unique([userId, promptId])
 }
 
 model Session {

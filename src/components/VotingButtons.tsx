@@ -1,99 +1,119 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { BiUpvote } from "react-icons/bi";
 import {
   AiOutlineLike,
   AiOutlineDislike,
   AiFillLike,
   AiFillDislike,
 } from "react-icons/ai";
-import { updateLike, updateDislike } from "@/actions/actions";
+import { updateUserVote } from "@/actions/actions";
 
 type VotingButtonsProps = {
   promptId: number;
   initialLikes: number;
   initialDislikes: number;
+  userVoteStatus: "LIKE" | "DISLIKE" | null;
+  isLoggedIn: boolean;
 };
 
 export const VotingButtons = ({
   promptId,
   initialLikes,
   initialDislikes,
+  userVoteStatus,
+  isLoggedIn,
 }: VotingButtonsProps) => {
   const [isPending, startTransition] = useTransition();
 
   const [likeCount, setLikeCount] = useState(initialLikes);
   const [dislikeCount, setDislikeCount] = useState(initialDislikes);
 
-  const [hasUpVoted, setHasUpVoted] = useState(false);
-  const [hasDownVoted, setHasDownVoted] = useState(false);
+  const [hasUpVoted, setHasUpVoted] = useState(userVoteStatus === "LIKE");
+  const [hasDownVoted, setHasDownVoted] = useState(
+    userVoteStatus === "DISLIKE"
+  );
 
   const handleUpVote = () => {
+    let newVoteType: "LIKE" | "DISLIKE" | "NONE";
+    let newLikeCount = likeCount;
+    let newDislikeCount = dislikeCount;
+
     if (hasUpVoted) {
-      setHasUpVoted(false);
-      setLikeCount(likeCount - 1);
-      startTransition(() => {
-        updateLike(promptId, -1);
-      });
+      newVoteType = "NONE";
+      newLikeCount--;
+    } else if (hasDownVoted) {
+      newVoteType = "LIKE";
+      newLikeCount++;
+      newDislikeCount--;
     } else {
-      setHasUpVoted(true);
-      setLikeCount(likeCount + 1);
-
-      if (hasDownVoted) {
-        setHasDownVoted(false);
-        setDislikeCount(dislikeCount - 1);
-
-        startTransition(async () => {
-          await updateLike(promptId, 1);
-          await updateDislike(promptId, -1);
-        });
-      } else {
-        startTransition(() => {
-          updateLike(promptId, 1);
-        });
-      }
+      newVoteType = "LIKE";
+      newLikeCount++;
     }
+
+    setHasUpVoted(newVoteType === "LIKE");
+    setHasDownVoted(false);
+    setLikeCount(newLikeCount);
+    setDislikeCount(newDislikeCount);
+
+    const prevVoteStatus = userVoteStatus;
+
+    startTransition(() => {
+      updateUserVote(promptId, newVoteType).catch(() => {
+        setHasUpVoted(prevVoteStatus === "LIKE");
+        setHasDownVoted(prevVoteStatus === "DISLIKE");
+        setLikeCount(initialLikes);
+        setDislikeCount(initialDislikes);
+      });
+    });
   };
 
   const handleDownVote = () => {
+    let newVoteType: "LIKE" | "DISLIKE" | "NONE";
+    let newLikeCount = likeCount;
+    let newDislikeCount = dislikeCount;
+
     if (hasDownVoted) {
-      setHasDownVoted(false);
-      setDislikeCount(dislikeCount - 1);
-      startTransition(() => {
-        updateDislike(promptId, -1);
-      });
+      newVoteType = "NONE";
+      newDislikeCount--;
+    } else if (hasUpVoted) {
+      newVoteType = "DISLIKE";
+      newLikeCount--;
+      newDislikeCount++;
     } else {
-      setHasDownVoted(true);
-      setDislikeCount(dislikeCount + 1);
-
-      if (hasUpVoted) {
-        setHasUpVoted(false);
-        setLikeCount(likeCount - 1);
-
-        startTransition(async () => {
-          await updateLike(promptId, -1);
-          await updateDislike(promptId, 1);
-        });
-      } else {
-        startTransition(() => {
-          updateDislike(promptId, 1);
-        });
-      }
+      newVoteType = "DISLIKE";
+      newDislikeCount++;
     }
+
+    setHasUpVoted(false);
+    setHasDownVoted(newVoteType === "DISLIKE");
+    setLikeCount(newLikeCount);
+    setDislikeCount(newDislikeCount);
+
+    const prevVoteStatus = userVoteStatus;
+
+    startTransition(() => {
+      updateUserVote(promptId, newVoteType).catch(() => {
+        setHasUpVoted(prevVoteStatus === "LIKE");
+        setHasDownVoted(prevVoteStatus === "DISLIKE");
+        setLikeCount(initialLikes);
+        setDislikeCount(initialDislikes);
+      });
+    });
   };
 
   return (
     <div className="flex items-center gap-[20px]">
       <button
         type="button"
-        className={`flex items-center gap-[5px] ${
-          hasUpVoted ? "bg-gray-100" : ""
-        } hover:bg-gray-100 p-[0.4rem] rounded-lg cursor-pointer transition`}
+        className={`flex items-center gap-[5px] p-[0.4rem] rounded-lg cursor-pointer transition 
+          ${isLoggedIn ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"} 
+          ${hasUpVoted && isLoggedIn ? "bg-gray-100" : ""}
+        `}
         onClick={handleUpVote}
-        disabled={isPending}
+        disabled={!isLoggedIn || isPending}
       >
-        {hasUpVoted ? (
+        {hasUpVoted && isLoggedIn ? (
           <AiFillLike className="text-[20px]" />
         ) : (
           <AiOutlineLike className="text-[20px]" />
@@ -102,20 +122,21 @@ export const VotingButtons = ({
       </button>
       <button
         type="button"
-        className={`flex items-center gap-[5px] ${
-          hasDownVoted ? "bg-red-100" : ""
-        } hover:bg-gray-100 p-[0.4rem] rounded-lg cursor-pointer transition`}
+        className={`flex items-center gap-[5px] p-[0.4rem] rounded-lg cursor-pointer transition 
+          ${isLoggedIn ? "hover:bg-red-100" : "opacity-50 cursor-not-allowed"}
+          ${hasDownVoted && isLoggedIn ? "bg-red-100" : ""}
+        `}
         onClick={handleDownVote}
-        disabled={isPending}
+        disabled={!isLoggedIn || isPending}
       >
-        {hasDownVoted ? (
-          <AiFillDislike className="text-[20px] text-red-600" />
+        {hasDownVoted && isLoggedIn ? (
+          <AiFillDislike className={"text-[20px] text-red-600"} />
         ) : (
           <AiOutlineDislike className="text-[20px]" />
         )}
         <span
           className={`text-[14px] ${
-            hasDownVoted ? "font-semibold text-red-600" : ""
+            hasDownVoted && isLoggedIn ? "font-semibold text-red-600" : ""
           }`}
         >
           {dislikeCount}
