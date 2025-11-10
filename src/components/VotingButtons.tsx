@@ -8,6 +8,7 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import { updateUserVote } from "@/actions/actions";
+import toast from "react-hot-toast";
 
 type VotingButtonsProps = {
   promptId: number;
@@ -58,13 +59,18 @@ export const VotingButtons = ({
 
     const prevVoteStatus = userVoteStatus;
 
-    startTransition(() => {
-      updateUserVote(promptId, newVoteType).catch(() => {
+    startTransition(async () => {
+      try {
+        await updateUserVote(promptId, newVoteType);
+      } catch (error: any) {
+        toast.error(
+          error.message || "Failed to submit vote. Please try again."
+        );
         setHasUpVoted(prevVoteStatus === "LIKE");
         setHasDownVoted(prevVoteStatus === "DISLIKE");
         setLikeCount(initialLikes);
         setDislikeCount(initialDislikes);
-      });
+      }
     });
   };
 
@@ -92,13 +98,18 @@ export const VotingButtons = ({
 
     const prevVoteStatus = userVoteStatus;
 
-    startTransition(() => {
-      updateUserVote(promptId, newVoteType).catch(() => {
+    startTransition(async () => {
+      try {
+        await updateUserVote(promptId, newVoteType);
+      } catch (error: any) {
+        toast.error(
+          error.message || "Failed to submit vote. Please try again."
+        );
         setHasUpVoted(prevVoteStatus === "LIKE");
         setHasDownVoted(prevVoteStatus === "DISLIKE");
         setLikeCount(initialLikes);
         setDislikeCount(initialDislikes);
-      });
+      }
     });
   };
 
@@ -111,7 +122,6 @@ export const VotingButtons = ({
           ${hasUpVoted && isLoggedIn ? "bg-gray-100" : ""}
         `}
         onClick={handleUpVote}
-        disabled={!isLoggedIn || isPending}
       >
         {hasUpVoted && isLoggedIn ? (
           <AiFillLike className="text-[20px]" />
@@ -127,7 +137,6 @@ export const VotingButtons = ({
           ${hasDownVoted && isLoggedIn ? "bg-red-100" : ""}
         `}
         onClick={handleDownVote}
-        disabled={!isLoggedIn || isPending}
       >
         {hasDownVoted && isLoggedIn ? (
           <AiFillDislike className={"text-[20px] text-red-600"} />
