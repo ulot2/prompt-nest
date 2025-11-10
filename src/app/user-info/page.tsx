@@ -33,6 +33,7 @@ async function GetUserDetails({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const session = await auth();
+  const userId = session?.user?.id;
 
   const page = Number(searchParams.page) || 1;
   const skip = (page - 1) * promptPerPage;
@@ -57,6 +58,12 @@ async function GetUserDetails({
       userName: true,
       userId: true,
       createdAt: true,
+      votes: userId
+        ? {
+            where: { userId },
+            select: { type: true },
+          }
+        : true,
     },
     where: {
       userId: session?.user?.id,
@@ -69,6 +76,11 @@ async function GetUserDetails({
   });
 
   const totalPages = Math.ceil(totalPrompts / promptPerPage);
+
+  const promptsWithStatus = prompts.map((prompt) => ({
+    ...prompt,
+    userVoteStatus: prompt.votes.length > 0 ? prompt.votes[0].type : null,
+  }));
 
   return (
     <div>
@@ -104,7 +116,7 @@ async function GetUserDetails({
       </div>
       <PromptList
         session={session}
-        prompts={prompts}
+        prompts={promptsWithStatus}
         currentPage={page}
         totalPages={totalPages}
       />

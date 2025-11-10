@@ -151,7 +151,20 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
                 disabled={isSubmitting}
                 className="bg-black text-white text-[14px] px-[10px] items-center gap-[2%] font-semibold  rounded-lg cursor-pointer transform  duration-200 hover:scale-105 transition"
               >
-                {isSubmitting ? "Submitting..." : "Submit Prompt"}
+                {isSubmitting ? (
+                  <>
+                    Submitting
+                    <span className="inline-block animate-pulse">.</span>
+                    <span className="inline-block animate-pulse [animation-delay:0.2s]">
+                      .
+                    </span>
+                    <span className="inline-block animate-pulse [animation-delay:0.4s]">
+                      .
+                    </span>
+                  </>
+                ) : (
+                  "Submit Prompt"
+                )}
               </button>
             </div>
           </form>
