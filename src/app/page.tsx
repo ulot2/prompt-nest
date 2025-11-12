@@ -1,15 +1,15 @@
 "use server";
 
 import { auth } from "@/auth";
-
 import { prisma } from "@/lib/db";
+import { Suspense } from "react";
+import { unstable_cache as cache } from "next/cache";
+
 import { Navbar } from "@/components/Navbar";
 import { PromptList } from "@/components/PromptList";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import WebsiteDetails from "@/components/WebsiteDetails";
-import { unstable_cache as cache } from "next/cache";
 import { SearchPrompt } from "@/components/SearchPrompt";
-import { Suspense } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default async function Home() {
