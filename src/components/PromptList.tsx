@@ -20,15 +20,15 @@ export const PromptList = ({
 
   return (
     <div>
-      <div className="max-w-[900px] mx-auto mt-[2rem] flex justify-center gap-[2%] flex-wrap">
+      <div className="max-w-[900px] mx-auto mt-[2rem] ml-[2rem] grid grid-cols-1 md:grid-cols-2 gap-4">
         {prompts.map((prompt) => (
-          <div key={prompt.id} className="w-[45%] mb-[2%]">
-            <PromptCard
-              session={session}
-              prompt={prompt}
-              setSelectedPrompt={setSelectedPrompt}
-            />
-          </div>
+          <PromptCard
+            key={prompt.id}
+            session={session}
+            prompt={prompt}
+            setSelectedPrompt={setSelectedPrompt}
+            userVoteStatus={prompt.userVoteStatus || null}
+          />
         ))}
       </div>
       {totalPages > 1 && (

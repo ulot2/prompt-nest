@@ -68,7 +68,7 @@ model Vote {
   promptId Int
   type     String
   user     User   @relation(fields: [userId], references: [id])
-  prompt   Prompt @relation(fields: [promptId], references: [id])
+  prompt   Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
 
   @@unique([userId, promptId])
 }
