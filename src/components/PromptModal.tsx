@@ -4,10 +4,11 @@ import Image from "next/image";
 import { IoIosClose } from "react-icons/io";
 import { IoCheckmark } from "react-icons/io5";
 import { FaRegCopy } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { format } from "path";
 import { formatTime } from "@/lib/utils";
+import { VotingButtons } from "./VotingButtons";
 
 interface PromptModalProps {
   isOpen: boolean;
@@ -22,12 +23,16 @@ interface PromptModalProps {
     img: string;
     userName: string;
     createdAt: string | Date;
+    likes: number;
+    dislikes: number;
+    userVoteStatus?: "LIKE" | "DISLIKE" | null;
   } | null;
 }
 
 export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState("");
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = async () => {
     try {
@@ -44,8 +49,19 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+
     window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [onClose]);
 
   return (
@@ -58,6 +74,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={modalRef}
             className="bg-white w-[40%] h-[85%] p-[1rem] rounded-lg overflow-auto"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -102,11 +119,8 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
                 alt="user-image"
                 className="rounded-[50%] mr-[5px]"
               />
-              <div>
+              <div className="flex items-center justify-between w-full">
                 <h4>{prompt.userName}</h4>
-                <p className="flex gap-[0.4rem] text-[#848587] text-[15px]">
-                  <span>324 votes</span> . <span>4212 views</span>
-                </p>
               </div>
             </div>
 
@@ -122,7 +136,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
             </div>
 
             <div className="flex justify-between items-center">
-              <p>Prompt</p>
+              <p>Full prompt</p>
               <button
                 type="button"
                 className="flex justify-center items-center gap-[7px] border border-gray-300 hover:bg-[#e9ebef] transition px-[14px] py-[5px] rounded-lg cursor-pointer"
@@ -137,6 +151,15 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
               <pre className="whitespace-pre-wrap font-mono text-sm">
                 {prompt.fullPrompt}
               </pre>
+            </div>
+            <div className="mt-[10px] flex justify-end">
+              <VotingButtons
+                promptId={prompt.id}
+                initialLikes={prompt.likes}
+                initialDislikes={prompt.dislikes}
+                userVoteStatus={prompt.userVoteStatus ?? null}
+                isLoggedIn={!!prompt.userName}
+              />
             </div>
           </motion.div>
         </motion.div>

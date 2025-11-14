@@ -37,7 +37,6 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
       closeModal();
       toast.success("Prompt submitted successfully!");
     } catch (err) {
-      console.error("Error submitting prompt:", err);
       toast.error("Failed to submit prompt.");
     } finally {
       setIsSubmitting(false);
