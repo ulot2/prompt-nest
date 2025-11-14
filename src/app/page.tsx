@@ -34,7 +34,7 @@ export default async function Home({
   );
 }
 
-const promptPerPage = 5;
+const promptPerPage = 10;
 
 const getTotalPrompts = cache(
   async () => prisma.prompt.count(),
