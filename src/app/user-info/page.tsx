@@ -6,8 +6,14 @@ import { prisma } from "@/lib/db";
 import { PromptList } from "@/components/PromptList";
 import { UserInfoHeader } from "@/components/UserInfoHeader";
 import { Suspense } from "react";
+import { FilterSidebar } from "@/components/FilterSidebar";
+import { getUniqueCategories, getUniqueTags } from "@/lib/filters";
 
-export default async function UserInfo() {
+export default async function UserInfo({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   return (
     <div>
       <UserInfoHeader />
@@ -19,7 +25,7 @@ export default async function UserInfo() {
           </div>
         }
       >
-        <GetUserDetails searchParams={{}} />
+        <GetUserDetails searchParams={searchParams} />
       </Suspense>
     </div>
   );
@@ -30,12 +36,40 @@ const promptPerPage = 5;
 async function GetUserDetails({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const params = await searchParams;
+
+  const sort = (params.sort as string) || "newest";
+  const categories = params.category
+    ? (params.category as string).split(",")
+    : [];
+  const tags = params.tag ? (params.tag as string).split(",") : [];
+
+  const whereClause: any = {};
+
+  if (categories.length > 0) {
+    whereClause.category = { in: categories };
+  }
+
+  if (tags.length > 0) {
+    whereClause.tags = {
+      hasSome: tags,
+    };
+  }
+
+  let orderByClause: any = { createdAt: "desc" };
+
+  if (sort === "trending") {
+    orderByClause = { likes: "desc" };
+  } else if (sort === "toprated") {
+    orderByClause = { dislikes: "desc" };
+  }
+
   const session = await auth();
   const userId = session?.user?.id;
 
-  const page = Number(searchParams.page) || 1;
+  const page = Number(params.page) || 1;
   const skip = (page - 1) * promptPerPage;
 
   const totalPrompts = await prisma.prompt.count({
@@ -45,6 +79,7 @@ async function GetUserDetails({
   });
 
   const prompts = await prisma.prompt.findMany({
+    orderBy: orderByClause,
     select: {
       likes: true,
       dislikes: true,
@@ -66,13 +101,11 @@ async function GetUserDetails({
         : true,
     },
     where: {
+      ...whereClause,
       userId: session?.user?.id,
     },
     take: promptPerPage,
     skip: skip,
-    orderBy: {
-      createdAt: "desc",
-    },
   });
 
   const totalPages = Math.ceil(totalPrompts / promptPerPage);
@@ -81,6 +114,9 @@ async function GetUserDetails({
     ...prompt,
     userVoteStatus: prompt.votes.length > 0 ? prompt.votes[0].type : null,
   }));
+
+  const availableCategories = await getUniqueCategories();
+  const availableTags = await getUniqueTags();
 
   return (
     <div>
@@ -114,12 +150,15 @@ async function GetUserDetails({
           </div>
         </div>
       </div>
-      <PromptList
-        session={session}
-        prompts={promptsWithStatus}
-        currentPage={page}
-        totalPages={totalPages}
-      />
+      <div className="flex">
+        <FilterSidebar categories={availableCategories} tags={availableTags} />
+        <PromptList
+          session={session}
+          prompts={promptsWithStatus}
+          currentPage={page}
+          totalPages={totalPages}
+        />
+      </div>
     </div>
   );
 }
