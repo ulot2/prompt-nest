@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("login");
 
   return (
-    <div className="flex flex-col justify-center mt-[2rem] items-center h-screen">
+    <div className="flex flex-col justify-center items-center h-screen">
       <div className="text-center mb-[1rem]">
         <Link href="">
           <h1 className="text-3xl font-bold">PromptNest</h1>
@@ -17,7 +17,7 @@ export default function LoginPage() {
         <p className="text-gray-600">Join the AI prompt community</p>
       </div>
       <div className="bg-white shadow-xl border-2 border-[#ececf0] w-[40%] px-[2rem] py-[1rem] rounded-xl">
-        <div className="bg-[#ececf0] py-[0.4rem] px-[0.8rem] rounded-lg flex justify-between">
+        {/* <div className="bg-[#ececf0] py-[0.4rem] px-[0.8rem] rounded-lg flex justify-between">
           <button
             type="button"
             className={`text-[15px] ${
@@ -36,13 +36,14 @@ export default function LoginPage() {
           >
             Sign Up
           </button>
-        </div>
+        </div> */}
 
         {/* login */}
-        {activeTab === "login" ? <Login /> : <Signup />}
+        {/* {activeTab === "login" ? <Login /> : <Signup />} */}
+        <Login />
       </div>
 
-      {activeTab === "login" ? (
+      {/* {activeTab === "login" ? (
         <footer className="py-[2rem]">
           <p className="text-[#717182]">
             {"Don't have an account?"}
@@ -66,7 +67,7 @@ export default function LoginPage() {
             </span>
           </p>
         </footer>
-      )}
+      )} */}
     </div>
   );
 }

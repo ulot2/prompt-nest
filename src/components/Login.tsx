@@ -8,7 +8,7 @@ export const Login = () => {
   return (
     <form>
       <p className="mt-[1rem] text-gray-400 text-center mb-[1rem]">
-        Welcome back! Sign in to your account
+        Welcome! Sign in to your account
       </p>
       <div className="w-full flex flex-col gap-[1rem] justify-between">
         <button

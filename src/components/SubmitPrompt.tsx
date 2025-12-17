@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import { motion, AnimatePresence } from "motion/react";
 import { createPrompt } from "@/actions/actions";
@@ -14,6 +14,26 @@ type ModalProps = {
 export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        closeModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeModal]);
 
   const handleInput = () => {
     const el = textareaRef.current;
@@ -52,6 +72,7 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
         className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center"
       >
         <motion.div
+          ref={modalRef}
           className="bg-white w-[40%] h-[85%] p-[1.3rem] rounded-lg overflow-auto"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

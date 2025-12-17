@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, FormEvent } from "react";
+import { useRef, useState, FormEvent, useEffect } from "react";
 import { IoIosClose } from "react-icons/io";
 import { motion, AnimatePresence } from "motion/react";
 import { editPrompt } from "@/actions/actions";
@@ -35,7 +35,28 @@ export const EditPrompt = ({ isOpen, closeModal, prompt }: ModalProps) => {
   const [fullPrompt, setFullPrompt] = useState(prompt.fullPrompt);
   const [promptCategory, setPromptCategory] = useState(prompt.category);
   const [promptTags, setPromptTags] = useState(prompt.tags.join(", "));
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const router = useRouter();
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        closeModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeModal]);
 
   const handleInput = () => {
     const el = textareaRef.current;
@@ -80,6 +101,7 @@ export const EditPrompt = ({ isOpen, closeModal, prompt }: ModalProps) => {
         className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center"
       >
         <motion.div
+          ref={modalRef}
           className="bg-white w-[40%] h-[85%] p-[1.3rem] rounded-lg overflow-auto"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
