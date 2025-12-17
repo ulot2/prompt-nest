@@ -51,7 +51,7 @@ export const Navbar = ({ session }: NavbarProps) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="bg-black text-white flex justify-center items-center gap-[2%] w-[160px] font-semibold  rounded-lg cursor-pointer transform  duration-200 hover:scale-105 hover:bg-[#2f3030] transition"
+            className="bg-black text-white flex justify-center items-center gap-[2%] w-[165px] font-semibold  rounded-lg cursor-pointer transform  duration-200 hover:scale-105 hover:bg-[#2f3030] transition"
             onClick={openModal}
           >
             <IoIosAdd />

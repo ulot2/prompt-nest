@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
 export async function createPrompt(formData: FormData) {
   const session = await auth();
@@ -65,7 +66,7 @@ export async function updateUserVote(
     },
   });
 
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     if (existingVote) {
       await tx.vote.delete({
         where: { id: existingVote.id },

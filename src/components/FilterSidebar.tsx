@@ -114,7 +114,7 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <h3 className="text-sm font-semibold text-foreground mb-3">Category</h3>
         <div className="space-y-2">
           {tags.length > 0 ? (
@@ -138,7 +138,7 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
             <p className="text-sm text-gray-400">No tags yet</p>
           )}
         </div>
-      </div>
+      </div> */}
     </aside>
   );
 }
