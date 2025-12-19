@@ -91,8 +91,9 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
             </button>
           </div>
           <p className="text-[#848587] text-[14px]">
-            Share your favorite AI prompt with the community. Make sure it's
-            useful and well-documented!
+            {
+              "Share your favorite AI prompt with the community. Make sure it's useful and well-documented!"
+            }
           </p>
           {/* submit prompt form */}
           <form onSubmit={handleSubmit} className="mt-[1rem]">
