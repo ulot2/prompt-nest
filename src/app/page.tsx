@@ -118,7 +118,7 @@ async function GetPrompts({
   });
   const totalPages = Math.ceil(totalPrompts / promptPerPage);
 
-  const promptsWithStatus = prompts.map((prompt) => ({
+  const promptsWithStatus = prompts.map((prompt: any) => ({
     ...prompt,
     userVoteStatus: prompt.votes.length > 0 ? prompt.votes[0].type : null,
   }));
