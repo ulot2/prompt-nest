@@ -3,7 +3,6 @@
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
-import { Prisma } from "@prisma/client";
 
 export async function createPrompt(formData: FormData) {
   const session = await auth();
@@ -66,49 +65,61 @@ export async function updateUserVote(
     },
   });
 
-  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    if (existingVote) {
-      await tx.vote.delete({
-        where: { id: existingVote.id },
-      });
-
-      if (existingVote.type === "LIKE") {
-        await tx.prompt.update({
-          where: { id: promptId },
-          data: { likes: { decrement: 1 } },
-        });
-      } else if (existingVote.type === "DISLIKE") {
-        await tx.prompt.update({
-          where: { id: promptId },
-          data: { dislikes: { decrement: 1 } },
-        });
-      }
-    }
-
-    if (newVoteType !== "NONE") {
-      if (!existingVote || existingVote.type !== newVoteType) {
-        await tx.vote.create({
-          data: {
-            userId,
-            promptId,
-            type: newVoteType,
-          },
+  await prisma.$transaction(
+    async (
+      tx: Omit<
+        typeof prisma,
+        | "$connect"
+        | "$disconnect"
+        | "$on"
+        | "$transaction"
+        | "$use"
+        | "$extends"
+      >
+    ) => {
+      if (existingVote) {
+        await tx.vote.delete({
+          where: { id: existingVote.id },
         });
 
-        if (newVoteType === "LIKE") {
+        if (existingVote.type === "LIKE") {
           await tx.prompt.update({
             where: { id: promptId },
-            data: { likes: { increment: 1 } },
+            data: { likes: { decrement: 1 } },
           });
-        } else if (newVoteType === "DISLIKE") {
+        } else if (existingVote.type === "DISLIKE") {
           await tx.prompt.update({
             where: { id: promptId },
-            data: { dislikes: { increment: 1 } },
+            data: { dislikes: { decrement: 1 } },
           });
         }
       }
+
+      if (newVoteType !== "NONE") {
+        if (!existingVote || existingVote.type !== newVoteType) {
+          await tx.vote.create({
+            data: {
+              userId,
+              promptId,
+              type: newVoteType,
+            },
+          });
+
+          if (newVoteType === "LIKE") {
+            await tx.prompt.update({
+              where: { id: promptId },
+              data: { likes: { increment: 1 } },
+            });
+          } else if (newVoteType === "DISLIKE") {
+            await tx.prompt.update({
+              where: { id: promptId },
+              data: { dislikes: { increment: 1 } },
+            });
+          }
+        }
+      }
     }
-  });
+  );
 
   revalidatePath("/");
 }
