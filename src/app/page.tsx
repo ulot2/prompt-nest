@@ -123,8 +123,8 @@ async function GetPrompts({
     userVoteStatus: prompt.votes.length > 0 ? prompt.votes[0].type : null,
   }));
 
-  const availableCategories = await getUniqueCategories();
-  const availableTags = await getUniqueTags();
+  const availableCategories = (await getUniqueCategories()) as string[];
+  const availableTags = (await getUniqueTags()) as string[];
 
   return (
     <div className="">
