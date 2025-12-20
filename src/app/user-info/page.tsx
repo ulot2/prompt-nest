@@ -120,8 +120,8 @@ async function GetUserDetails({
         : null,
   }));
 
-  const availableCategories = await getUniqueCategories();
-  const availableTags = await getUniqueTags();
+  const availableCategories = (await getUniqueCategories()) as string[];
+  const availableTags = (await getUniqueTags()) as string[];
 
   return (
     <div>
