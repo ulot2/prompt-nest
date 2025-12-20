@@ -12,6 +12,11 @@ import { FilterSidebar } from "@/components/FilterSidebar";
 import WebsiteDetails from "@/components/WebsiteDetails";
 import { SearchPrompt } from "@/components/SearchPrompt";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { Prisma } from "@prisma/client";
+
+type PromptWithVotes = Prisma.PromptGetPayload<{
+  include: { votes: true };
+}>;
 
 export default async function Home({
   searchParams,
@@ -118,7 +123,7 @@ async function GetPrompts({
   });
   const totalPages = Math.ceil(totalPrompts / promptPerPage);
 
-  const promptsWithStatus = prompts.map((prompt: any) => ({
+  const promptsWithStatus = (prompts as PromptWithVotes[]).map((prompt) => ({
     ...prompt,
     userVoteStatus: prompt.votes.length > 0 ? prompt.votes[0].type : null,
   }));
