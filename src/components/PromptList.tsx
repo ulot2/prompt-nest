@@ -19,8 +19,8 @@ export const PromptList = ({
   const [selectedPrompt, setSelectedPrompt] = useState<any | null>(null);
 
   return (
-    <div>
-      <div className="max-w-[900px] mx-auto mt-[2rem] ml-[2rem] grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="w-full">
+      <div className="max-w-[900px] mx-auto mt-8 px-4 sm:px-2 grid grid-cols-1 md:grid-cols-2 gap-4">
         {prompts.map((prompt) => (
           <PromptCard
             key={prompt.id}

@@ -15,7 +15,7 @@ export const UserInfoHeader = () => {
   return (
     <>
       <div className="border-b border-gray-300 bg-white">
-        <div className="w-full max-w-[900px] mx-auto flex justify-between items-center my-[0.5rem]">
+        <div className="w-full max-w-[900px] mx-auto flex justify-between items-center my-[0.5rem] px-4 md:px-0">
           <div className="flex items-center">
             <IoIosArrowRoundBack />
             <button

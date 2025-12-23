@@ -13,7 +13,7 @@ export const Login = () => {
       <div className="w-full flex flex-col gap-[1rem] justify-between">
         <button
           type="button"
-          className="flex justify-center items-center gap-[1rem] border border-gray-300 py-[0.5rem] px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
+          className="flex justify-center items-center gap-[1rem] border border-gray-300 py-[0.5rem] lg:px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
           onClick={() => login("google")}
         >
           <FcGoogle />
@@ -21,7 +21,7 @@ export const Login = () => {
         </button>
         <button
           type="button"
-          className="flex justify-center items-center gap-[1rem] border border-gray-300 py-[0.5rem] px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
+          className="flex justify-center items-center gap-[1rem] border border-gray-300 py-[0.5rem] lg:px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
           onClick={() => login("github")}
         >
           <FaGithub />

@@ -9,12 +9,12 @@ export default function WebsiteDetails({
 }: WebsiteDetailsProps) {
   return (
     <div className="max-w-[900px] w-full mx-auto mt-[1rem]">
-      <div className="flex gap-[1rem] justify-center">
-        <div className="bg-white border border-gray-300 p-[0.5rem] w-[20%] rounded-lg">
+      <div className="md:flex gap-[1rem] justify-center">
+        <div className="bg-white border border-gray-300 p-[0.5rem] mb-[0.5rem] md:mb-[0rem] w-[90%] mx-auto md:mx-[0] md:w-[20%] rounded-lg">
           <h1>{totalPrompts}</h1>
           <p>Total prompts</p>
         </div>
-        <div className="bg-white border border-gray-300 p-[0.5rem] w-[20%] rounded-lg">
+        <div className="bg-white border border-gray-300 p-[0.5rem] w-[90%] mx-auto md:mx-[0] md:w-[20%] rounded-lg">
           <h1>{totalUsers}</h1>
           <p>Community members</p>
         </div>

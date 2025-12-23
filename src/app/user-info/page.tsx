@@ -155,7 +155,7 @@ async function GetUserDetails({
           </div>
         </div>
       </div>
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row relative">
         <FilterSidebar categories={availableCategories} tags={availableTags} />
         <PromptList
           session={session}

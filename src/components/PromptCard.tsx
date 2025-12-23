@@ -68,8 +68,8 @@ export const PromptCard = ({
   };
 
   return (
-    <div className="w-full h-[290px] border border-gray-300 rounded-[1.2rem] bg-white hover:shadow-lg transition-shadow duration-200">
-      <div className="px-[1.2rem] pt-[1.2rem] mb-[0.2rem] flex justify-between">
+    <div className="w-full h-full flex flex-col justify-between border border-gray-300 rounded-[1.2rem] bg-white hover:shadow-lg transition-shadow duration-200">
+      <div className="px-[1.2rem] pt-[1.2rem] mb-[0.2rem] flex justify-between shrink-0">
         <div className="flex gap-[0.5rem] items-center">
           <div className="bg-[#e6e7f7] border border-[#adb0f7] py-[0.1rem] px-[1rem] rounded-[200px]">
             <h1 className="text-[#343ad1] font-semibold text-[13px]">
@@ -100,12 +100,14 @@ export const PromptCard = ({
           <span className="ml-[2px]">5689</span>
         </div>
       </div>
-      <div onClick={() => setSelectedPrompt(prompt)} className="cursor-pointer">
+      <div onClick={() => setSelectedPrompt(prompt)} className="cursor-pointer flex-grow flex flex-col">
         <div>
-          <h1 className="px-[1.2rem]">{prompt.title}</h1>
+          <h1 className="px-[1.2rem] font-semibold truncate">{prompt.title}</h1>
         </div>
-        <p className="px-[1.2rem] text-[#848587]">{prompt.description}</p>
-        <div className="px-[1.2rem] flex gap-[0.5rem] my-[2rem]">
+        <p className="px-[1.2rem] text-[#848587] line-clamp-3 my-2 flex-grow">
+          {prompt.description}
+        </p>
+        <div className="px-[1.2rem] flex flex-wrap gap-[0.5rem] mb-[1rem] mt-auto">
           {prompt.tags.map((tag, index) => (
             <div
               key={index}

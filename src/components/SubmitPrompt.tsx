@@ -73,7 +73,7 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
       >
         <motion.div
           ref={modalRef}
-          className="bg-white w-[40%] h-[85%] p-[1.3rem] rounded-lg overflow-auto"
+          className="bg-white w-full lg:w-[40%] h-[85%] p-[1.3rem] rounded-lg overflow-auto"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}

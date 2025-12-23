@@ -16,7 +16,7 @@ export default function LoginPage() {
         </Link>
         <p className="text-gray-600">Join the AI prompt community</p>
       </div>
-      <div className="bg-white shadow-xl border-2 border-[#ececf0] w-[40%] px-[2rem] py-[1rem] rounded-xl">
+      <div className="bg-white shadow-xl border-2 border-[#ececf0] lg:w-[40%] md:w-[85%] w-[85%] px-[2rem] py-[1rem] rounded-xl">
         {/* <div className="bg-[#ececf0] py-[0.4rem] px-[0.8rem] rounded-lg flex justify-between">
           <button
             type="button"

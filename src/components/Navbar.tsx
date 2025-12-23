@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { IoIosLogIn, IoIosAdd } from "react-icons/io";
+import { IoIosLogIn, IoIosAdd, IoIosMenu, IoIosClose } from "react-icons/io";
 import { SubmitPrompt } from "./SubmitPrompt";
 import { useState } from "react";
 import { Session } from "next-auth";
@@ -15,20 +15,25 @@ interface NavbarProps {
 
 export const Navbar = ({ session }: NavbarProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
   return (
-    <div className="border-b border-gray-300 bg-white">
-      <div className="w-full max-w-[900px] mx-auto flex justify-between items-center my-[0.5rem]">
+    <div className="border-b border-gray-300 bg-white relative z-50">
+      <div className="w-full max-w-[900px] mx-auto flex justify-between items-center my-[0.5rem] px-4 md:px-0">
         <div className="cursor-pointer">
           <h1 className="text-2xl font-bold">PromptNest</h1>
           <p className="text-[10px] text-[#aeb0af] font-bold">
             Community AI prompts
           </p>
         </div>
-        <div className="flex gap-[4%]">
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex gap-[4%]">
           {session?.user ? (
             ""
           ) : (
@@ -38,7 +43,7 @@ export const Navbar = ({ session }: NavbarProps) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="flex justify-center items-center gap-[5px] border border-gray-300 font-semibold w-[100px] p-[0.3rem] rounded-lg cursor-pointer transform  duration-200 hover:scale-105 hover:bg-[#e9ebef] transition"
+                className="flex justify-center items-center gap-[5px] border border-gray-300 font-semibold w-[100px] p-[0.3rem] rounded-lg cursor-pointer transform duration-200 hover:scale-105 hover:bg-[#e9ebef] transition"
               >
                 <IoIosLogIn />
                 Login
@@ -51,12 +56,13 @@ export const Navbar = ({ session }: NavbarProps) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="bg-black text-white flex justify-center items-center gap-[2%] w-[165px] font-semibold  rounded-lg cursor-pointer transform  duration-200 hover:scale-105 hover:bg-[#2f3030] transition"
+            className="bg-black text-white flex justify-center items-center gap-[2%] w-[165px] font-semibold rounded-lg cursor-pointer transform duration-200 hover:scale-105 hover:bg-[#2f3030] transition"
             onClick={openModal}
           >
             <IoIosAdd />
             Submit prompt
           </motion.button>
+
           <div>
             {session?.user && (
               <div className="flex gap-[10px] items-center">
@@ -86,7 +92,83 @@ export const Navbar = ({ session }: NavbarProps) => {
             )}
           </div>
         </div>
+
+        {/* Mobile Hamburger */}
+        <div className="md:hidden">
+          <button
+            type="button"
+            onClick={toggleMobileMenu}
+            className="text-2xl p-2 text-gray-700"
+          >
+            {isMobileMenuOpen ? <IoIosClose /> : <IoIosMenu />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="md:hidden overflow-hidden bg-white border-t border-gray-100"
+          >
+            <div className="flex flex-col p-4 gap-4">
+              {session?.user ? (
+                <>
+                  <Link
+                    href="/user-info"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className="flex items-center gap-2 py-2">
+                      <Image
+                        className="rounded-full"
+                        src={session.user.image ?? ""}
+                        width={24}
+                        height={24}
+                        alt="avatar"
+                      />
+                      <span className="font-semibold">Profile</span>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex w-full items-center gap-2 py-2 font-semibold text-gray-700"
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/auth/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <div className="flex items-center gap-2 py-2 font-semibold text-gray-700">
+                    <IoIosLogIn className="text-xl" />
+                    Login
+                  </div>
+                </Link>
+              )}
+
+              <button
+                onClick={() => {
+                  openModal();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="bg-black text-white w-full py-2 rounded-lg font-semibold flex items-center justify-center gap-2"
+              >
+                <IoIosAdd />
+                Submit prompt
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <SubmitPrompt isOpen={isModalOpen} closeModal={closeModal} />
     </div>
   );
