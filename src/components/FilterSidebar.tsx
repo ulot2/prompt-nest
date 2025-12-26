@@ -49,7 +49,7 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
   };
 
   return (
-    <aside className="w-full lg:w-50 lg:border-r border-gray-300 lg:p-6 h-fit sticky top-4 bg-background z-20 relative">
+    <aside className="w-full lg:w-50 lg:border-r border-gray-300 lg:p-6 h-fit sticky top-4 bg-background z-20">
       {/* Mobile Toggle Button */}
       <div className="lg:hidden">
         <button
@@ -62,7 +62,13 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
       </div>
 
       {/* Filter Content */}
-      <div className={`${isOpen ? "absolute top-[100%] left-4 right-4 shadow-xl  rounded-b-lg p-4 bg-white z-50" : "hidden"} lg:block lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent`}>
+      <div
+        className={`${
+          isOpen
+            ? "absolute top-[100%] left-4 right-4 shadow-xl  rounded-b-lg p-4 bg-white z-50"
+            : "hidden"
+        } lg:block lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent`}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold">Filters</h2>
           {(searchParams.get("sort") ||

@@ -3,3 +3,7 @@
 body {
   background-color: #fbf7ff;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}

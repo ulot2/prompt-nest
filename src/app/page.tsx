@@ -57,7 +57,10 @@ async function GetPrompts({
   const categories = params.category
     ? (params.category as string).split(",")
     : [];
+
   const tags = params.tag ? (params.tag as string).split(",") : [];
+
+  const searchQuery = (params.search as string) || "";
 
   const whereClause: any = {};
 
@@ -69,6 +72,28 @@ async function GetPrompts({
     whereClause.tags = {
       hasSome: tags,
     };
+  }
+
+  if (searchQuery) {
+    whereClause.OR = [
+      {
+        title: {
+          contains: searchQuery,
+          mode: "insensitive",
+        },
+      },
+      {
+        description: {
+          contains: searchQuery,
+          mode: "insensitive",
+        },
+      },
+      {
+        tags: {
+          hasSome: [searchQuery],
+        },
+      },
+    ];
   }
 
   let orderByClause: any = { createdAt: "desc" };
@@ -134,7 +159,7 @@ async function GetPrompts({
   return (
     <div className="">
       <Navbar session={session} />
-      <SearchPrompt />
+      <SearchPrompt resultsCount={totalPrompts} />
 
       <WebsiteDetails
         totalUsers={totalUsers}
