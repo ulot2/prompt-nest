@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Session } from "next-auth";
 import Image from "next/image";
 import { logout } from "@/lib/actions/auth";
+import toast from "react-hot-toast";
 
 interface NavbarProps {
   session: Session | null;
@@ -57,7 +58,13 @@ export const Navbar = ({ session }: NavbarProps) => {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
             className="bg-black text-white flex justify-center items-center gap-[2%] w-[165px] font-semibold rounded-lg cursor-pointer transform duration-200 hover:scale-105 hover:bg-[#2f3030] transition"
-            onClick={openModal}
+            onClick={() => {
+              if (session?.user) {
+                openModal();
+              } else {
+                toast.error("Please login first to submit a prompt");
+              }
+            }}
           >
             <IoIosAdd />
             Submit prompt
@@ -133,6 +140,7 @@ export const Navbar = ({ session }: NavbarProps) => {
                     </div>
                   </Link>
                   <button
+                    type="button"
                     onClick={() => {
                       logout();
                       setIsMobileMenuOpen(false);
@@ -155,9 +163,14 @@ export const Navbar = ({ session }: NavbarProps) => {
               )}
 
               <button
+                type="button"
                 onClick={() => {
-                  openModal();
-                  setIsMobileMenuOpen(false);
+                  if (session?.user) {
+                    openModal();
+                    setIsMobileMenuOpen(false);
+                  } else {
+                    toast.error("Please login first to submit a prompt");
+                  }
                 }}
                 className="bg-black text-white w-full py-2 rounded-lg font-semibold flex items-center justify-center gap-2"
               >

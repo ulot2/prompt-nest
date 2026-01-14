@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PromtNest",
+  title: "PromptNest",
   description: "A hub for AI prompts",
 };
 
