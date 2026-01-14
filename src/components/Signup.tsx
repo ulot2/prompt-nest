@@ -5,14 +5,14 @@ import { login } from "@/lib/actions/auth";
 export const Signup = () => {
   return (
     <form>
-      <p className="mt-[1rem] text-gray-400 text-center mb-[1rem]">
+      <p className="mt-[1rem] text-gray-400 dark:text-gray-500 text-center mb-[1rem]">
         Create an account to start sharing prompts
       </p>
       {/* social login buttons */}
       <div className="w-full flex flex-col gap-[1rem] justify-between">
         <button
           type="button"
-          className="flex justify-center items-center gap-[1rem] border border-gray-300 py-[0.5rem] px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
+          className="flex justify-center items-center gap-[1rem] border border-gray-300 dark:border-gray-700 py-[0.5rem] px-4 rounded-lg hover:bg-[#e9ebef] dark:hover:bg-gray-800 transition cursor-pointer dark:text-gray-200"
           onClick={() => login("google")}
         >
           <FcGoogle />
@@ -20,7 +20,7 @@ export const Signup = () => {
         </button>
         <button
           type="button"
-          className="flex justify-center items-center gap-[1rem] border border-gray-300 py-[0.5rem] px-[4rem] rounded-lg hover:bg-[#e9ebef] transition cursor-pointer"
+          className="flex justify-center items-center gap-[1rem] border border-gray-300 dark:border-gray-700 py-[0.5rem] px-4 rounded-lg hover:bg-[#e9ebef] dark:hover:bg-gray-800 transition cursor-pointer dark:text-gray-200"
           onClick={() => login("github")}
         >
           <FaGithub />

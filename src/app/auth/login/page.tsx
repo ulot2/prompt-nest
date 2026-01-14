@@ -9,14 +9,16 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("login");
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-center min-h-screen py-8">
       <div className="text-center mb-[1rem]">
         <Link href="">
-          <h1 className="text-3xl font-bold">PromptNest</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100">PromptNest</h1>
         </Link>
-        <p className="text-gray-600">Join the AI prompt community</p>
+        <p className="text-gray-600 dark:text-gray-400">
+          Join the AI prompt community
+        </p>
       </div>
-      <div className="bg-white shadow-xl border-2 border-[#ececf0] lg:w-[40%] md:w-[85%] w-[85%] px-[2rem] py-[1rem] rounded-xl">
+      <div className="bg-white dark:bg-[#0d1117] shadow-xl border-2 border-[#ececf0] dark:border-white/10 lg:w-[40%] md:w-[60%] w-[90%] max-w-md px-[1rem] md:px-[2rem] py-[1rem] rounded-xl">
         {/* <div className="bg-[#ececf0] py-[0.4rem] px-[0.8rem] rounded-lg flex justify-between">
           <button
             type="button"
