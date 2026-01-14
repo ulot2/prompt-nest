@@ -75,7 +75,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
         >
           <motion.div
             ref={modalRef}
-            className="bg-white dark:bg-gray-900 w-full lg:w-[40%] h-[85%] p-[1rem] rounded-lg overflow-auto"
+            className="bg-white dark:bg-gray-900 w-[90%] lg:w-[40%] h-[85%] p-[1rem] rounded-lg overflow-auto"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
@@ -128,7 +128,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
               </div>
             </div>
 
-            <div className="flex gap-[0.5rem] my-[1rem]">
+            <div className="flex flex-wrap gap-[0.5rem] my-[1rem]">
               {prompt.tags.map((tag, index) => (
                 <div
                   key={index}

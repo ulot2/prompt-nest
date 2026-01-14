@@ -47,7 +47,7 @@ export const SearchPrompt = ({ resultsCount }: SearchPromptProps) => {
   };
 
   return (
-    <div className="relative max-w-[1200px] mx-auto px-4 md:px-0">
+    <div className="relative max-w-[1200px] mx-auto px-4 md:px-0 overflow-hidden md:overflow-visible">
       <div className="absolute -top-20 -left-20 w-72 h-72 bg-gradient-to-br from-gray-100/40 to-slate-100/40 dark:from-slate-800/20 dark:to-gray-800/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -top-10 -right-10 w-56 h-56 bg-gradient-to-br from-gray-100/30 to-slate-100/30 dark:from-slate-800/10 dark:to-gray-800/10 rounded-full blur-3xl pointer-events-none" />
 
