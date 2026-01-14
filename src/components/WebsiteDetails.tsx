@@ -1,3 +1,5 @@
+import { FaLayerGroup, FaUsers } from "react-icons/fa6";
+
 type WebsiteDetailsProps = {
   totalPrompts: number;
   totalUsers: number;
@@ -8,20 +10,35 @@ export default function WebsiteDetails({
   totalPrompts,
 }: WebsiteDetailsProps) {
   return (
-    <div className="max-w-[900px] w-full mx-auto mt-[1rem]">
-      <div className="md:flex gap-[1rem] justify-center">
-        <div className="bg-white border border-gray-300 p-[0.5rem] mb-[0.5rem] md:mb-[0rem] w-[90%] mx-auto md:mx-[0] md:w-[20%] rounded-lg">
-          <h1>{totalPrompts}</h1>
-          <p>Total prompts</p>
+    <div className="w-full max-w-[1200px] mx-auto mt-4 px-4 md:px-0 mb-3">
+      <div className="flex flex-wrap justify-center gap-3">
+        <div className="group bg-white border border-gray-200 pl-3 pr-5 py-2 rounded-full shadow-sm hover:shadow-md hover:border-violet-200 transition-all duration-300 flex items-center gap-3">
+          <div className="p-1.5 bg-violet-50 rounded-full group-hover:scale-110 transition-transform duration-300">
+            <FaLayerGroup className="text-violet-600 text-sm" />
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-lg font-bold text-gray-900 leading-none">
+              {totalPrompts}
+            </h1>
+            <p className="text-[10px] font-medium text-gray-500 leading-tight">
+              Total Prompts
+            </p>
+          </div>
         </div>
-        <div className="bg-white border border-gray-300 p-[0.5rem] w-[90%] mx-auto md:mx-[0] md:w-[20%] rounded-lg">
-          <h1>{totalUsers}</h1>
-          <p>Community members</p>
+
+        <div className="group bg-white border border-gray-200 pl-3 pr-5 py-2 rounded-full shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-300 flex items-center gap-3">
+          <div className="p-1.5 bg-emerald-50 rounded-full group-hover:scale-110 transition-transform duration-300">
+            <FaUsers className="text-emerald-600 text-sm" />
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-lg font-bold text-gray-900 leading-none">
+              {totalUsers}
+            </h1>
+            <p className="text-[10px] font-medium text-gray-500 leading-tight">
+              Community Members
+            </p>
+          </div>
         </div>
-        {/* <div className="bg-white border border-gray-300 p-[0.5rem] w-[20%] rounded-lg">
-          <h1>156k</h1>
-          <p>Prompts copied</p>
-        </div> */}
       </div>
     </div>
   );

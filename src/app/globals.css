@@ -1,7 +1,16 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 body {
   background-color: #fbf7ff;
+  color: #0f172a;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark body {
+  background-color: #0d1117;
+  color: #f8fafc;
 }
 
 input[type="search"]::-webkit-search-cancel-button {

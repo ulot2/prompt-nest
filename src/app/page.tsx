@@ -165,7 +165,7 @@ async function GetPrompts({
         totalUsers={totalUsers}
         totalPrompts={totalPromptsCount}
       />
-      <div className="flex flex-col lg:flex-row relative">
+      <div className="flex flex-col lg:flex-row relative max-w-[1200px] mx-auto px-4 md:px-0">
         <FilterSidebar categories={availableCategories} tags={availableTags} />
 
         <PromptList

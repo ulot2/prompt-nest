@@ -114,38 +114,62 @@ export const VotingButtons = ({
   };
 
   return (
-    <div className="flex items-center gap-[20px]">
+    <div className="flex items-center gap-1">
       <button
         type="button"
-        className={`flex items-center gap-[5px] p-[0.4rem] rounded-lg cursor-pointer transition 
-          ${isLoggedIn ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"} 
-          ${hasUpVoted && isLoggedIn ? "bg-gray-100" : ""}
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200
+          ${
+            isLoggedIn
+              ? "hover:bg-indigo-50 cursor-pointer"
+              : "opacity-50 cursor-not-allowed"
+          } 
+          ${
+            hasUpVoted && isLoggedIn
+              ? "bg-indigo-50 text-indigo-600"
+              : "text-gray-500"
+          }
         `}
         onClick={handleUpVote}
+        disabled={!isLoggedIn}
       >
         {hasUpVoted && isLoggedIn ? (
-          <AiFillLike className="text-[20px]" />
+          <AiFillLike className="text-base text-indigo-600" />
         ) : (
-          <AiOutlineLike className="text-[20px]" />
+          <AiOutlineLike className="text-base" />
         )}
-        <span className="text-[14px] font-semibold">{likeCount}</span>
+        <span
+          className={`text-xs font-semibold ${
+            hasUpVoted && isLoggedIn ? "text-indigo-600" : ""
+          }`}
+        >
+          {likeCount}
+        </span>
       </button>
       <button
         type="button"
-        className={`flex items-center gap-[5px] p-[0.4rem] rounded-lg cursor-pointer transition 
-          ${isLoggedIn ? "hover:bg-red-100" : "opacity-50 cursor-not-allowed"}
-          ${hasDownVoted && isLoggedIn ? "bg-red-100" : ""}
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200
+          ${
+            isLoggedIn
+              ? "hover:bg-rose-50 cursor-pointer"
+              : "opacity-50 cursor-not-allowed"
+          }
+          ${
+            hasDownVoted && isLoggedIn
+              ? "bg-rose-50 text-rose-600"
+              : "text-gray-500"
+          }
         `}
         onClick={handleDownVote}
+        disabled={!isLoggedIn}
       >
         {hasDownVoted && isLoggedIn ? (
-          <AiFillDislike className={"text-[20px] text-red-600"} />
+          <AiFillDislike className="text-base text-rose-600" />
         ) : (
-          <AiOutlineDislike className="text-[20px]" />
+          <AiOutlineDislike className="text-base" />
         )}
         <span
-          className={`text-[14px] ${
-            hasDownVoted && isLoggedIn ? "font-semibold text-red-600" : ""
+          className={`text-xs font-semibold ${
+            hasDownVoted && isLoggedIn ? "text-rose-600" : ""
           }`}
         >
           {dislikeCount}

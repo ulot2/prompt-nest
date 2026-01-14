@@ -75,7 +75,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
         >
           <motion.div
             ref={modalRef}
-            className="bg-white w-full lg:w-[40%] h-[85%] p-[1rem] rounded-lg overflow-auto"
+            className="bg-white dark:bg-gray-900 w-full lg:w-[40%] h-[85%] p-[1rem] rounded-lg overflow-auto"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
@@ -83,16 +83,18 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
           >
             <div className="flex justify-between items-center">
               <div className="flex gap-[0.5rem]">
-                <div className="bg-[#e6e7f7] border border-[#adb0f7] py-[0.1rem] px-[1rem] rounded-[200px]">
-                  <h1 className="text-[#343ad1] font-semibold text-[13px]">
-                    chatgpt
+                <div className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-800 py-[0.1rem] px-[1rem] rounded-[200px]">
+                  <h1 className="text-indigo-700 dark:text-indigo-300 font-semibold text-[13px]">
+                    {prompt.category || "General"}
                   </h1>
                 </div>
-                <p className="text-[#848587]">{formatTime(prompt.createdAt)}</p>
+                <p className="text-gray-500 dark:text-gray-400">
+                  {formatTime(prompt.createdAt)}
+                </p>
               </div>
               <button
                 type="button"
-                className="text-[25px] text-[#848587] hover:text-black transition cursor-pointer"
+                className="text-[25px] text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition cursor-pointer"
                 onClick={onClose}
               >
                 <IoIosClose />
@@ -100,10 +102,10 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
               </button>
             </div>
 
-            <h1 className="text-2xl font-semibold mt-[0.8rem]">
+            <h1 className="text-2xl font-semibold mt-[0.8rem] text-gray-900 dark:text-white">
               {prompt.title}
             </h1>
-            <p className="text-[13px] text-[#848587] mt-[0.5rem]">
+            <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-[0.5rem]">
               {prompt.description}
             </p>
 
@@ -117,10 +119,12 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
                 width={45}
                 height={45}
                 alt="user-image"
-                className="rounded-[50%] mr-[5px]"
+                className="rounded-full mr-[5px] ring-2 ring-white dark:ring-gray-800"
               />
               <div className="flex items-center justify-between w-full">
-                <h4>{prompt.userName}</h4>
+                <h4 className="text-gray-900 dark:text-gray-200">
+                  {prompt.userName}
+                </h4>
               </div>
             </div>
 
@@ -128,7 +132,7 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
               {prompt.tags.map((tag, index) => (
                 <div
                   key={index}
-                  className="bg-[#eceef2] px-[0.7rem] py-[0.1rem] rounded-[200px] text-[13px]"
+                  className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-[0.7rem] py-[0.1rem] rounded-[200px] text-[13px]"
                 >
                   {tag}
                 </div>
@@ -136,10 +140,10 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
             </div>
 
             <div className="flex justify-between items-center">
-              <p>Full prompt</p>
+              <p className="text-gray-900 dark:text-gray-200">Full prompt</p>
               <button
                 type="button"
-                className="flex justify-center items-center gap-[7px] border border-gray-300 hover:bg-[#e9ebef] transition px-[14px] py-[5px] rounded-lg cursor-pointer"
+                className="flex justify-center items-center gap-[7px] border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition px-[14px] py-[5px] rounded-lg cursor-pointer"
                 onClick={handleCopy}
               >
                 {!copied ? <FaRegCopy /> : <IoCheckmark />}
@@ -147,8 +151,8 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
               </button>
             </div>
 
-            <div className="bg-[#ececf0] mt-[0.7rem] p-[0.7rem] rounded-lg">
-              <pre className="whitespace-pre-wrap font-mono text-sm">
+            <div className="bg-gray-100 dark:bg-gray-800/50 mt-[0.7rem] p-[0.7rem] rounded-lg">
+              <pre className="whitespace-pre-wrap font-mono text-sm text-gray-800 dark:text-gray-200">
                 {prompt.fullPrompt}
               </pre>
             </div>

@@ -2,6 +2,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { VotingButtons } from "./VotingButtons";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { HiOutlineSparkles } from "react-icons/hi2";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { deletePrompt, editPrompt } from "@/actions/actions";
 import toast from "react-hot-toast";
 import { EditPrompt } from "./EditPromptModal";
@@ -31,6 +33,28 @@ type Prompt = {
   userVoteStatus: "LIKE" | "DISLIKE" | null;
 };
 
+// Category color mapping for visual variety (using inline styles for Tailwind JIT compatibility)
+const getCategoryClasses = (category: string) => {
+  const categories: Record<string, string> = {
+    Writing:
+      "bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-300 border-violet-100 dark:border-violet-800/30",
+    Coding:
+      "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-300 border-emerald-100 dark:border-emerald-800/30",
+    Marketing:
+      "bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-300 border-rose-100 dark:border-rose-800/30",
+    Business:
+      "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-300 border-amber-100 dark:border-amber-800/30",
+    Education:
+      "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-300 border-sky-100 dark:border-sky-800/30",
+    Creative:
+      "bg-fuchsia-50 dark:bg-fuchsia-900/20 text-fuchsia-600 dark:text-fuchsia-300 border-fuchsia-100 dark:border-fuchsia-800/30",
+  };
+  return (
+    categories[category] ||
+    "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-300 border-indigo-100 dark:border-indigo-800/30"
+  );
+};
+
 export const PromptCard = ({
   prompt,
   setSelectedPrompt,
@@ -39,9 +63,11 @@ export const PromptCard = ({
 }: Prompt) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 
   const isLoggedIn = !!session?.user;
+  const categoryClasses = getCategoryClasses(prompt.category);
 
   const handleEdit = () => setIsEditing(true);
   const handleClose = () => setIsEditing(false);
@@ -68,74 +94,110 @@ export const PromptCard = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-between border border-gray-300 rounded-[1.2rem] bg-white hover:shadow-lg transition-shadow duration-200">
-      <div className="px-[1.2rem] pt-[1.2rem] mb-[0.2rem] flex justify-between shrink-0">
-        <div className="flex gap-[0.5rem] items-center">
-          <div className="bg-[#e6e7f7] border border-[#adb0f7] py-[0.1rem] px-[1rem] rounded-[200px]">
-            <h1 className="text-[#343ad1] font-semibold text-[13px]">
+    <div
+      className="group relative w-full h-full flex flex-col justify-between rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-300 ease-out hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-none hover:border-gray-200 dark:hover:border-gray-700 hover:-translate-y-1"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-50/0 via-transparent to-indigo-50/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+      <div className="relative px-5 pt-5 pb-3 flex justify-between items-start shrink-0">
+        <div className="flex gap-2 items-center flex-wrap">
+          <div
+            className={`flex items-center gap-1.5 py-1 px-3 rounded-full transition-all duration-200 group-hover:shadow-sm border ${categoryClasses}`}
+          >
+            <HiOutlineSparkles className="text-xs" />
+            <span className="font-medium text-xs tracking-wide">
               {prompt.category}
-            </h1>
+            </span>
           </div>
+
           {session?.user?.id === prompt.userId && (
-            <div>
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
               <button
-                className="border border-gray-300 px-[0.4rem] rounded-lg text-[12px] hover:bg-gray-100 transition cursor-pointer"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-200 cursor-pointer"
                 type="button"
                 onClick={handleEdit}
+                title="Edit prompt"
               >
-                Edit
+                <FiEdit2 className="text-sm" />
               </button>
               <button
-                className="border border-gray-300 px-[0.4rem] ml-[0.5rem] rounded-lg text-[12px] hover:bg-gray-100 transition cursor-pointer"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all duration-200 cursor-pointer"
                 type="button"
                 onClick={handleDelete}
+                title="Delete prompt"
               >
-                {isDeleting ? "Deleting..." : "Delete"}
+                <FiTrash2
+                  className={`text-sm ${isDeleting ? "animate-pulse" : ""}`}
+                />
               </button>
             </div>
           )}
         </div>
-        <div className="flex items-center text-[#848587] sr-only">
-          <MdOutlineRemoveRedEye />
-          <span className="ml-[2px]">5689</span>
-        </div>
-      </div>
-      <div onClick={() => setSelectedPrompt(prompt)} className="cursor-pointer flex-grow flex flex-col">
-        <div>
-          <h1 className="px-[1.2rem] font-semibold truncate">{prompt.title}</h1>
-        </div>
-        <p className="px-[1.2rem] text-[#848587] line-clamp-3 my-2 flex-grow">
-          {prompt.description}
-        </p>
-        <div className="px-[1.2rem] flex flex-wrap gap-[0.5rem] mb-[1rem] mt-auto">
-          {prompt.tags.map((tag, index) => (
-            <div
-              key={index}
-              className="bg-[#eceef2] px-[0.7rem] py-[0.1rem] rounded-[200px] text-[13px]"
-            >
-              {tag}
-            </div>
-          ))}
+
+        <div className="flex items-center text-gray-400 text-xs sr-only">
+          <MdOutlineRemoveRedEye className="mr-1" />
+          <span>5689</span>
         </div>
       </div>
 
-      <hr className="border border-gray-100 " />
-      <div className="flex justify-between items-center px-[1.2rem] py-[1rem]">
-        <div className="flex items-center">
-          <Image
-            src={
-              prompt.img?.startsWith("http")
-                ? prompt.img
-                : "/images/user-alt-img.jpg"
-            }
-            width={30}
-            height={30}
-            alt="user-image"
-            className="rounded-[50%] mr-[5px]"
-          />
-          <p>{prompt.userName}</p>
+      <div
+        onClick={() => setSelectedPrompt(prompt)}
+        className="relative cursor-pointer flex-grow flex flex-col px-5"
+      >
+        <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base leading-snug line-clamp-2 group-hover:text-indigo-900 dark:group-hover:text-indigo-300 transition-colors duration-200">
+          {prompt.title}
+        </h2>
+
+        <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-3 mt-2 flex-grow">
+          {prompt.description}
+        </p>
+
+        <div className="flex flex-wrap gap-1.5 mt-4 mb-4">
+          {prompt.tags.slice(0, 4).map((tag, index) => (
+            <span
+              key={index}
+              className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2.5 py-0.5 rounded-md text-xs font-medium border border-gray-100 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-200 dark:hover:border-gray-600 transition-colors duration-150"
+            >
+              {tag}
+            </span>
+          ))}
+          {prompt.tags.length > 4 && (
+            <span className="text-gray-400 dark:text-gray-500 text-xs px-1.5 py-0.5">
+              +{prompt.tags.length - 4}
+            </span>
+          )}
         </div>
-        <div>
+      </div>
+
+      <div className="relative border-t border-gray-50 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 group-hover:bg-gray-50/80 dark:group-hover:bg-gray-800/80 transition-colors duration-200">
+        <div className="flex justify-between items-center px-5 py-3">
+          <div className="flex items-center gap-2.5">
+            <div className="relative">
+              <Image
+                src={
+                  prompt.img?.startsWith("http")
+                    ? prompt.img
+                    : "/images/user-alt-img.jpg"
+                }
+                width={32}
+                height={32}
+                alt="user-image"
+                className="rounded-full ring-2 ring-white dark:ring-gray-800 shadow-sm object-cover"
+              />
+              <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-white dark:ring-gray-800" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-tight">
+                {prompt.userName}
+              </span>
+              <span className="text-xs text-gray-400 dark:text-gray-500 leading-tight">
+                Creator
+              </span>
+            </div>
+          </div>
+
           <VotingButtons
             promptId={prompt.id}
             initialLikes={prompt.likes}
@@ -145,6 +207,7 @@ export const PromptCard = ({
           />
         </div>
       </div>
+
       {isEditing && (
         <EditPrompt
           isOpen={isEditing}
