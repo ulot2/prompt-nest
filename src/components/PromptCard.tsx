@@ -2,14 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { VotingButtons } from "./VotingButtons";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { HiOutlineSparkles } from "react-icons/hi2";
+import { HiOutlineSparkles, HiOutlineTag } from "react-icons/hi2";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { deletePrompt, editPrompt } from "@/actions/actions";
 import toast from "react-hot-toast";
 import { EditPrompt } from "./EditPromptModal";
 import { useRouter } from "next/dist/client/components/navigation";
 import { ShareButtons } from "./ShareButtons";
+import { RiRobot2Line } from "react-icons/ri";
 
 type PromptCardProps = {
   id: number;
@@ -26,6 +28,7 @@ type PromptCardProps = {
   likes: number;
   dislikes: number;
   userVoteStatus: "LIKE" | "DISLIKE" | null;
+  isBookmarked?: boolean;
 };
 
 type Prompt = {
@@ -66,6 +69,7 @@ export const PromptCard = ({
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(prompt.isBookmarked);
   const router = useRouter();
 
   const isLoggedIn = !!session?.user;
@@ -95,6 +99,41 @@ export const PromptCard = ({
     }
   };
 
+  const handleBookmark = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isLoggedIn) {
+      toast.error("Please login to save prompts");
+      return;
+    }
+
+    const newStatus = !isBookmarked;
+    setIsBookmarked(newStatus);
+
+    try {
+      const response = await fetch("/api/bookmark", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ promptId: prompt.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to bookmark");
+      }
+
+      toast.success(
+        newStatus
+          ? "Prompt saved to bookmarks"
+          : "Prompt removed from bookmarks"
+      );
+      router.refresh();
+    } catch (error) {
+      setIsBookmarked(!newStatus);
+      toast.error("Something went wrong");
+    }
+  };
+
   return (
     <div
       className="group relative w-full h-full flex flex-col justify-between rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-300 ease-out hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-none hover:border-gray-200 dark:hover:border-gray-700 hover:-translate-y-1"
@@ -108,7 +147,7 @@ export const PromptCard = ({
           <div
             className={`flex items-center gap-1.5 py-1 px-3 rounded-full transition-all duration-200 group-hover:shadow-sm border ${categoryClasses}`}
           >
-            <HiOutlineSparkles className="text-xs" />
+            <RiRobot2Line className="w-3.5 h-3.5" />
             <span className="font-medium text-xs tracking-wide">
               {prompt.category}
             </span>
@@ -213,6 +252,21 @@ export const PromptCard = ({
               text={prompt.description}
               size="sm"
             />
+            <button
+              onClick={handleBookmark}
+              className={`p-2 rounded-lg transition-all duration-200 ${
+                isBookmarked
+                  ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                  : "text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
+              }`}
+              title={isBookmarked ? "Remove from bookmarks" : "Save prompt"}
+            >
+              {isBookmarked ? (
+                <FaBookmark className="text-lg" />
+              ) : (
+                <FaRegBookmark className="text-lg" />
+              )}
+            </button>
             <div className="w-px h-8 bg-gray-200 dark:bg-gray-700 mx-1" />
             <VotingButtons
               promptId={prompt.id}

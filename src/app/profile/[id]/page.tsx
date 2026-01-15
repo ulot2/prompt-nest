@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import Image from "next/image";
+import { ProfilePageSkeleton } from "@/components/ProfilePageSkeleton";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { prisma } from "@/lib/db";
@@ -21,16 +22,7 @@ export default async function UserProfile({
 }) {
   return (
     <div>
-      <Suspense
-        fallback={
-          <div className="flex justify-center items-center h-screen bg-white dark:bg-black">
-            <div className="bg-black dark:bg-white w-[200px] py-[0.5rem] flex justify-center items-center gap-2 rounded-lg shadow-md">
-              <AiOutlineLoading3Quarters className="animate-spin text-[16px] text-white dark:text-black" />
-              <p className="text-white dark:text-black">Loading profile...</p>
-            </div>
-          </div>
-        }
-      >
+      <Suspense fallback={<ProfilePageSkeleton />}>
         <ProfileContent params={params} searchParams={searchParams} />
       </Suspense>
     </div>

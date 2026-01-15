@@ -11,7 +11,7 @@ import { PromptList } from "@/components/PromptList";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import WebsiteDetails from "@/components/WebsiteDetails";
 import { SearchPrompt } from "@/components/SearchPrompt";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { MainPageSkeleton } from "@/components/MainPageSkeleton";
 
 export default async function Home({
   searchParams,
@@ -20,14 +20,7 @@ export default async function Home({
 }) {
   return (
     <div>
-      <Suspense
-        fallback={
-          <div className=" bg-black w-[200px] py-[0.5rem] flex justify-center items-center gap-2 mx-auto mt-[2rem] rounded-lg shadow-md">
-            <AiOutlineLoading3Quarters className="animate-spin text-[16px] text-white" />
-            <p className="text-white">Loading prompts...</p>
-          </div>
-        }
-      >
+      <Suspense fallback={<MainPageSkeleton />}>
         <GetPrompts searchParams={searchParams} />
       </Suspense>
     </div>
@@ -131,12 +124,14 @@ async function GetPrompts({
       userName: true,
       userId: true,
       createdAt: true,
-      votes: userId
-        ? {
-            where: { userId },
-            select: { type: true },
-          }
-        : true,
+      votes: {
+        where: { userId: userId ?? "" },
+        select: { type: true },
+      },
+      bookmarks: {
+        where: { userId: userId ?? "" },
+        select: { id: true },
+      },
     },
     take: promptPerPage,
     skip: (page - 1) * promptPerPage,
@@ -151,6 +146,8 @@ async function GetPrompts({
       Array.isArray(prompt.votes) && prompt.votes.length > 0
         ? prompt.votes[0].type
         : null,
+    isBookmarked:
+      Array.isArray(prompt.bookmarks) && prompt.bookmarks.length > 0,
   }));
 
   const availableCategories = (await getUniqueCategories()) as string[];

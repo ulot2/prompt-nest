@@ -10,7 +10,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { PromptDetailsSkeleton } from "@/components/PromptDetailsSkeleton";
 import { Suspense } from "react";
 
 // Category styling helper (consistent with PromptCard)
@@ -42,16 +42,7 @@ export default function PromptPage({
 }) {
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <Suspense
-        fallback={
-          <div className="flex justify-center items-center h-screen">
-            <div className="bg-black dark:bg-white w-[200px] py-[0.5rem] flex justify-center items-center gap-2 rounded-lg shadow-md">
-              <AiOutlineLoading3Quarters className="animate-spin text-[16px] text-white dark:text-black" />
-              <p className="text-white dark:text-black">Loading prompt...</p>
-            </div>
-          </div>
-        }
-      >
+      <Suspense fallback={<PromptDetailsSkeleton />}>
         <PromptContent params={params} />
       </Suspense>
     </div>
@@ -77,7 +68,6 @@ async function PromptContent({ params }: { params: Promise<{ id: string }> }) {
       <Navbar session={session} />
 
       <main className="max-w-[1200px] mx-auto px-4 py-8 md:px-6 lg:py-12">
-        {/* Breadcrumb */}
         <nav className="flex items-center text-sm text-gray-500 mb-8 overflow-x-auto whitespace-nowrap">
           <Link
             href="/"
@@ -239,7 +229,6 @@ async function PromptContent({ params }: { params: Promise<{ id: string }> }) {
               </div>
             </div>
 
-            {/* Metadata */}
             <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800/50">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
                 Prompt Details

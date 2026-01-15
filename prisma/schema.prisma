@@ -43,6 +43,7 @@ model User {
   sessions      Session[]
   prompts       Prompt[]
   votes         Vote[]
+  bookmarks     Bookmark[]
 }
 
 model Prompt {
@@ -60,6 +61,7 @@ model Prompt {
   userId      String?
   user        User?    @relation(fields: [userId], references: [id])
   votes       Vote[]
+  bookmarks   Bookmark[]
 }
 
 model Vote {
@@ -69,6 +71,18 @@ model Vote {
   type     String
   user     User   @relation(fields: [userId], references: [id])
   prompt   Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promptId])
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  promptId  Int
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
 
   @@unique([userId, promptId])
 }
