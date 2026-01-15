@@ -221,30 +221,32 @@ export const PromptCard = ({
 
       <div className="relative border-t border-gray-50 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 group-hover:bg-gray-50/80 dark:group-hover:bg-gray-800/80 transition-colors duration-200">
         <div className="flex justify-between items-center px-5 py-3">
-          <div className="flex items-center gap-2.5">
-            <div className="relative">
-              <Image
-                src={
-                  prompt.img?.startsWith("http")
-                    ? prompt.img
-                    : "/images/user-alt-img.jpg"
-                }
-                width={32}
-                height={32}
-                alt="user-image"
-                className="rounded-full ring-2 ring-white dark:ring-gray-800 shadow-sm object-cover"
-              />
-              <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-white dark:ring-gray-800" />
+          <Link href={`/profile/${prompt.userId}`}>
+            <div className="flex items-center gap-2.5">
+              <div className="relative shrink-0">
+                <Image
+                  src={
+                    prompt.img?.startsWith("http")
+                      ? prompt.img
+                      : "/images/user-alt-img.jpg"
+                  }
+                  width={32}
+                  height={32}
+                  alt="user-image"
+                  className="rounded-full ring-2 ring-white dark:ring-gray-800 shadow-sm object-cover"
+                />
+                {/* <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-white dark:ring-gray-800" /> */}
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-tight truncate">
+                  {prompt.userName}
+                </span>
+                <span className="text-xs text-gray-400 dark:text-gray-500 leading-tight">
+                  Creator
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-tight">
-                {prompt.userName}
-              </span>
-              <span className="text-xs text-gray-400 dark:text-gray-500 leading-tight">
-                Creator
-              </span>
-            </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-3">
             <ShareButtons

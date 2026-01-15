@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { FiFilter, FiChevronDown, FiX } from "react-icons/fi";
+import {
+  FiFilter,
+  FiChevronDown,
+  FiX,
+  FiTrendingUp,
+  FiStar,
+  FiClock,
+} from "react-icons/fi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { motion } from "motion/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -60,9 +67,21 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
   ].reduce((a, b) => a + b, 0);
 
   const sortOptions = [
-    { value: "trending", label: "Trending", icon: "🔥" },
-    { value: "newest", label: "Newest", icon: "✨" },
-    { value: "toprated", label: "Top Rated", icon: "⭐" },
+    {
+      value: "trending",
+      label: "Trending",
+      icon: <FiTrendingUp className="w-4 h-4" />,
+    },
+    {
+      value: "newest",
+      label: "Newest",
+      icon: <FiClock className="w-4 h-4" />,
+    },
+    {
+      value: "toprated",
+      label: "Top Rated",
+      icon: <FiStar className="w-4 h-4" />,
+    },
   ];
 
   return (

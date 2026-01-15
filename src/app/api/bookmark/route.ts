@@ -20,9 +20,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const userId = session.user.id; // Correct property is id, not userId depending on session shape, but usually id in next-auth v5 with prisma adapter
+    const userId = session.user.id;
 
-    // Check if bookmark exists
     const existingBookmark = await prisma.bookmark.findUnique({
       where: {
         userId_promptId: {
@@ -33,7 +32,6 @@ export async function POST(req: Request) {
     });
 
     if (existingBookmark) {
-      // Remove bookmark
       await prisma.bookmark.delete({
         where: {
           id: existingBookmark.id,
