@@ -1,6 +1,6 @@
 import { getPrompt } from "@/actions/actions";
 import { auth } from "@/auth";
-import { Navbar } from "@/components/Navbar";
+import { CommentList } from "@/components/CommentList";
 import { CopyButton } from "@/components/CopyButton";
 import { ShareButtons } from "@/components/ShareButtons";
 import { VotingButtons } from "@/components/VotingButtons";
@@ -12,6 +12,7 @@ import { HiOutlineSparkles } from "react-icons/hi2";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { PromptDetailsSkeleton } from "@/components/PromptDetailsSkeleton";
 import { Suspense } from "react";
+import { Navbar } from "@/components/Navbar";
 
 // Category styling helper (consistent with PromptCard)
 const getCategoryClasses = (category: string) => {
@@ -158,6 +159,8 @@ async function PromptContent({ params }: { params: Promise<{ id: string }> }) {
                 align="left"
               />
             </div>
+
+            <CommentList promptId={prompt.id} />
           </div>
 
           <div className="space-y-8">

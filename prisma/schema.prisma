@@ -44,6 +44,7 @@ model User {
   prompts       Prompt[]
   votes         Vote[]
   bookmarks     Bookmark[]
+  comments      Comment[]
 }
 
 model Prompt {
@@ -62,6 +63,7 @@ model Prompt {
   user        User?    @relation(fields: [userId], references: [id])
   votes       Vote[]
   bookmarks   Bookmark[]
+  comments    Comment[]
 }
 
 model Vote {
@@ -102,4 +104,15 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+  userId    String
+  promptId  Int
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
 }
