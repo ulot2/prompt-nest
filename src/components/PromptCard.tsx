@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState } from "react";
 import { VotingButtons } from "./VotingButtons";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -8,6 +9,7 @@ import { deletePrompt, editPrompt } from "@/actions/actions";
 import toast from "react-hot-toast";
 import { EditPrompt } from "./EditPromptModal";
 import { useRouter } from "next/dist/client/components/navigation";
+import { ShareButtons } from "./ShareButtons";
 
 type PromptCardProps = {
   id: number;
@@ -136,14 +138,21 @@ export const PromptCard = ({
           )}
         </div>
 
-        <div className="flex items-center text-gray-400 text-xs sr-only">
-          <MdOutlineRemoveRedEye className="mr-1" />
-          <span>5689</span>
-        </div>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedPrompt(prompt);
+          }}
+          className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg"
+          title="Quick View"
+        >
+          <MdOutlineRemoveRedEye className="text-lg" />
+        </button>
       </div>
 
-      <div
-        onClick={() => setSelectedPrompt(prompt)}
+      <Link
+        href={`/prompt/${prompt.id}`}
         className="relative cursor-pointer flex-grow flex flex-col px-5"
       >
         <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base leading-snug line-clamp-2 group-hover:text-indigo-900 dark:group-hover:text-indigo-300 transition-colors duration-200">
@@ -169,7 +178,7 @@ export const PromptCard = ({
             </span>
           )}
         </div>
-      </div>
+      </Link>
 
       <div className="relative border-t border-gray-50 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 group-hover:bg-gray-50/80 dark:group-hover:bg-gray-800/80 transition-colors duration-200">
         <div className="flex justify-between items-center px-5 py-3">
@@ -198,13 +207,21 @@ export const PromptCard = ({
             </div>
           </div>
 
-          <VotingButtons
-            promptId={prompt.id}
-            initialLikes={prompt.likes}
-            initialDislikes={prompt.dislikes}
-            userVoteStatus={prompt.userVoteStatus}
-            isLoggedIn={isLoggedIn}
-          />
+          <div className="flex items-center gap-3">
+            <ShareButtons
+              title={`Check out this prompt: ${prompt.title}`}
+              text={prompt.description}
+              size="sm"
+            />
+            <div className="w-px h-8 bg-gray-200 dark:bg-gray-700 mx-1" />
+            <VotingButtons
+              promptId={prompt.id}
+              initialLikes={prompt.likes}
+              initialDislikes={prompt.dislikes}
+              userVoteStatus={prompt.userVoteStatus}
+              isLoggedIn={isLoggedIn}
+            />
+          </div>
         </div>
       </div>
 

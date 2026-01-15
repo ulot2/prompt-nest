@@ -36,6 +36,11 @@ export const VotingButtons = ({
   );
 
   const handleUpVote = () => {
+    if (!isLoggedIn) {
+      toast.error("Login to vote");
+      return;
+    }
+
     let newVoteType: "LIKE" | "DISLIKE" | "NONE";
     let newLikeCount = likeCount;
     let newDislikeCount = dislikeCount;
@@ -75,6 +80,11 @@ export const VotingButtons = ({
   };
 
   const handleDownVote = () => {
+    if (!isLoggedIn) {
+      toast.error("Login to vote");
+      return;
+    }
+
     let newVoteType: "LIKE" | "DISLIKE" | "NONE";
     let newLikeCount = likeCount;
     let newDislikeCount = dislikeCount;
@@ -121,7 +131,7 @@ export const VotingButtons = ({
           ${
             isLoggedIn
               ? "hover:bg-indigo-50 cursor-pointer"
-              : "opacity-50 cursor-not-allowed"
+              : "hover:bg-gray-100 cursor-pointer opacity-60"
           } 
           ${
             hasUpVoted && isLoggedIn
@@ -130,7 +140,7 @@ export const VotingButtons = ({
           }
         `}
         onClick={handleUpVote}
-        disabled={!isLoggedIn}
+        title={!isLoggedIn ? "Login to vote" : "Like"}
       >
         {hasUpVoted && isLoggedIn ? (
           <AiFillLike className="text-base text-indigo-600" />
@@ -151,7 +161,7 @@ export const VotingButtons = ({
           ${
             isLoggedIn
               ? "hover:bg-rose-50 cursor-pointer"
-              : "opacity-50 cursor-not-allowed"
+              : "hover:bg-gray-100 cursor-pointer opacity-60"
           }
           ${
             hasDownVoted && isLoggedIn
@@ -160,7 +170,7 @@ export const VotingButtons = ({
           }
         `}
         onClick={handleDownVote}
-        disabled={!isLoggedIn}
+        title={!isLoggedIn ? "Login to vote" : "Dislike"}
       >
         {hasDownVoted && isLoggedIn ? (
           <AiFillDislike className="text-base text-rose-600" />

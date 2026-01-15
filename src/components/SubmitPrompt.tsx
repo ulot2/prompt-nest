@@ -17,6 +17,10 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    }
+
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
     };
@@ -30,10 +34,11 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
     window.addEventListener("keydown", handleKey);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
+      document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKey);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [closeModal]);
+  }, [isOpen, closeModal]);
 
   const handleInput = () => {
     const el = textareaRef.current;
@@ -69,7 +74,7 @@ export const SubmitPrompt = ({ isOpen, closeModal }: ModalProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center"
+        className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center"
       >
         <motion.div
           ref={modalRef}

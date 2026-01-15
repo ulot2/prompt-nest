@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { format } from "path";
 import { formatTime } from "@/lib/utils";
 import { VotingButtons } from "./VotingButtons";
+import { ShareButtons } from "./ShareButtons";
 
 interface PromptModalProps {
   isOpen: boolean;
@@ -27,9 +28,15 @@ interface PromptModalProps {
     dislikes: number;
     userVoteStatus?: "LIKE" | "DISLIKE" | null;
   } | null;
+  session?: any;
 }
 
-export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
+export const PromptModal = ({
+  isOpen,
+  onClose,
+  prompt,
+  session,
+}: PromptModalProps) => {
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
@@ -46,6 +53,10 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
   };
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    }
+
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -59,16 +70,17 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
     window.addEventListener("keydown", handleKey);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
+      document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKey);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
       {isOpen && prompt && (
         <motion.div
-          className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -156,13 +168,18 @@ export const PromptModal = ({ isOpen, onClose, prompt }: PromptModalProps) => {
                 {prompt.fullPrompt}
               </pre>
             </div>
-            <div className="mt-[10px] flex justify-end">
+            <div className="mt-[1.5rem] flex justify-between items-center">
+              <ShareButtons
+                title={`Check out this prompt: ${prompt.title}`}
+                text={prompt.description}
+                align="left"
+              />
               <VotingButtons
                 promptId={prompt.id}
                 initialLikes={prompt.likes}
                 initialDislikes={prompt.dislikes}
                 userVoteStatus={prompt.userVoteStatus ?? null}
-                isLoggedIn={!!prompt.userName}
+                isLoggedIn={!!session?.user}
               />
             </div>
           </motion.div>

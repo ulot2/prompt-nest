@@ -66,7 +66,7 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
   ];
 
   return (
-    <aside className="w-full lg:w-56 shrink-0">
+    <aside className="w-full lg:w-56 shrink-0 relative">
       <div className="lg:hidden px-4 pt-4">
         <motion.button
           whileHover={{ scale: 1.02 }}
@@ -101,10 +101,11 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
           isOpen ? { opacity: 1, height: "auto" } : { opacity: 0, height: 0 }
         }
         transition={{ duration: 0.2 }}
-        className="overflow-hidden lg:!block lg:!h-auto lg:!opacity-100"
+        className="overflow-hidden absolute top-full left-0 right-0 z-20 lg:static lg:!block lg:!h-auto lg:!opacity-100 "
       >
-        <div className="p-4 lg:p-0 lg:pr-6 lg:sticky lg:top-24">
+        <div className="p-4 lg:p-0 lg:pr-6 lg:sticky lg:top-0">
           <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg shadow-gray-100/50 dark:shadow-none lg:shadow-none lg:bg-transparent lg:border-none lg:backdrop-blur-none p-5 lg:p-0">
+            {/* Header */}
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-2 px-2 py-2">
                 <div className="hidden lg:flex p-2 bg-gradient-to-br from-gray-100 to-slate-100 dark:from-gray-800 dark:to-slate-800 rounded-xl border border-gray-200 dark:border-gray-700">

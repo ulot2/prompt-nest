@@ -123,3 +123,25 @@ export async function updateUserVote(
 
   revalidatePath("/");
 }
+
+export async function getPrompt(promptId: number) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  const prompt = await prisma.prompt.findUnique({
+    where: { id: promptId },
+    include: {
+      votes: userId ? { where: { userId } } : false, // Only fetch user's vote if logged in
+    },
+  });
+
+  if (!prompt) return null;
+
+  return {
+    ...prompt,
+    userVoteStatus:
+      Array.isArray(prompt.votes) && prompt.votes.length > 0
+        ? prompt.votes[0].type
+        : null,
+  };
+}

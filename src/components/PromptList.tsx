@@ -103,6 +103,7 @@ export const PromptList = ({
         isOpen={!!selectedPrompt}
         onClose={() => setSelectedPrompt(null)}
         prompt={selectedPrompt}
+        session={session}
       />
     </div>
   );
