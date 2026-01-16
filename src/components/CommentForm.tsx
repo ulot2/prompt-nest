@@ -6,12 +6,10 @@ import toast from "react-hot-toast";
 
 export function CommentForm({
   promptId,
-  parentId,
   onSuccess,
   autoFocus,
 }: {
   promptId: number;
-  parentId?: number;
   onSuccess?: () => void;
   autoFocus?: boolean;
 }) {
@@ -24,7 +22,7 @@ export function CommentForm({
 
     startTransition(async () => {
       try {
-        await addComment(promptId, text, parentId);
+        await addComment(promptId, text);
         formRef.current?.reset();
         toast.success("Comment added");
         if (onSuccess) onSuccess();
@@ -40,7 +38,7 @@ export function CommentForm({
         <textarea
           name="comment"
           placeholder="What do you think about this prompt?"
-          className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-y text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 transition-all"
+          className="w-full min-h-[100px] p-3 md:p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-y text-base text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 transition-all"
           required
           autoFocus={autoFocus}
         />

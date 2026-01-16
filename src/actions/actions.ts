@@ -146,11 +146,7 @@ export async function getPrompt(promptId: number) {
   };
 }
 
-export async function addComment(
-  promptId: number,
-  text: string,
-  parentId?: number
-) {
+export async function addComment(promptId: number, text: string) {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Unauthorized");
 
@@ -159,7 +155,6 @@ export async function addComment(
       text,
       promptId,
       userId: session.user.id,
-      parentId,
     },
   });
   revalidatePath(`/prompt/${promptId}`);

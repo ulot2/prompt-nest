@@ -48,7 +48,7 @@ export const PromptList = ({
 
   return (
     <div className="w-full">
-      <div className="px-4 sm:px-2 pt-8 lg:pt-0">
+      <div className="sm:px-2 pt-8 lg:pt-0">
         <motion.div
           initial="hidden"
           animate="visible"

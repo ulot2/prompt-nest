@@ -177,17 +177,35 @@ export const PromptCard = ({
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedPrompt(prompt);
-          }}
-          className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg"
-          title="Quick View"
-        >
-          <MdOutlineRemoveRedEye className="text-lg" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={handleBookmark}
+            className={`p-1.5 rounded-lg transition-all duration-200 ${
+              isBookmarked
+                ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                : "text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
+            }`}
+            title={isBookmarked ? "Remove from bookmarks" : "Save prompt"}
+            type="button"
+          >
+            {isBookmarked ? (
+              <FaBookmark className="text-lg" />
+            ) : (
+              <FaRegBookmark className="text-lg" />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedPrompt(prompt);
+            }}
+            className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg"
+            title="Quick View"
+          >
+            <MdOutlineRemoveRedEye className="text-lg" />
+          </button>
+        </div>
       </div>
 
       <Link
@@ -248,34 +266,19 @@ export const PromptCard = ({
             </div>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <ShareButtons
-              title={`Check out this prompt: ${prompt.title}`}
-              text={prompt.description}
-              size="sm"
-            />
-            <button
-              onClick={handleBookmark}
-              className={`p-2 rounded-lg transition-all duration-200 ${
-                isBookmarked
-                  ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
-                  : "text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
-              }`}
-              title={isBookmarked ? "Remove from bookmarks" : "Save prompt"}
-            >
-              {isBookmarked ? (
-                <FaBookmark className="text-lg" />
-              ) : (
-                <FaRegBookmark className="text-lg" />
-              )}
-            </button>
-            <div className="w-px h-8 bg-gray-200 dark:bg-gray-700 mx-1" />
+          <div className="flex items-center gap-1">
             <VotingButtons
               promptId={prompt.id}
               initialLikes={prompt.likes}
               initialDislikes={prompt.dislikes}
               userVoteStatus={prompt.userVoteStatus}
               isLoggedIn={isLoggedIn}
+            />
+
+            <ShareButtons
+              title={`Check out this prompt: ${prompt.title}`}
+              text={prompt.description}
+              size="sm"
             />
           </div>
         </div>

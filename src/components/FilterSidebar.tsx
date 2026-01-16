@@ -28,6 +28,7 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
     params.set("sort", sortValue);
     params.set("page", "1");
     router.push(`?${params.toString()}`);
+    setIsOpen(false);
   };
 
   const handleCheckboxChange = (
@@ -50,10 +51,12 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
 
     params.set("page", "1");
     router.push(`?${params.toString()}`);
+    setIsOpen(false);
   };
 
   const handleClearAll = () => {
     router.push("/");
+    setIsOpen(false);
   };
 
   const hasActiveFilters =
