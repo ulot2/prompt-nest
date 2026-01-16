@@ -172,6 +172,7 @@ export const PromptModal = ({
               <ShareButtons
                 title={`Check out this prompt: ${prompt.title}`}
                 text={prompt.description}
+                url={`/prompt/${prompt.id}`}
                 align="left"
               />
               <VotingButtons

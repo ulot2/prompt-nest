@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { FaTwitter, FaLinkedin, FaLink, FaCheck } from "react-icons/fa6";
+import { FaXTwitter, FaLinkedin, FaLink, FaCheck } from "react-icons/fa6";
 import { FiShare2 } from "react-icons/fi";
 import { motion, AnimatePresence } from "motion/react";
 import toast from "react-hot-toast";
@@ -28,7 +28,13 @@ export const ShareButtons = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const shareUrl =
-    typeof window !== "undefined" ? url || window.location.href : "";
+    typeof window !== "undefined"
+      ? url
+        ? url.startsWith("/")
+          ? `${window.location.origin}${url}`
+          : url
+        : window.location.href
+      : "";
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedText = encodeURIComponent(`${title}\n\n${text}`);
 
@@ -113,8 +119,8 @@ export const ShareButtons = ({
                 onClick={(e) => handleShare(e, "twitter")}
                 className="flex items-center gap-3 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors cursor-pointer"
               >
-                <FaTwitter className="text-black dark:text-white" />
-                <span>Twitter</span>
+                <FaXTwitter className="text-black dark:text-white" />
+                <span>X</span>
               </button>
 
               <button

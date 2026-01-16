@@ -278,6 +278,7 @@ export const PromptCard = ({
             <ShareButtons
               title={`Check out this prompt: ${prompt.title}`}
               text={prompt.description}
+              url={`/prompt/${prompt.id}`}
               size="sm"
             />
           </div>
