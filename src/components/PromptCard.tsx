@@ -12,6 +12,7 @@ import { EditPrompt } from "./EditPromptModal";
 import { useRouter } from "next/dist/client/components/navigation";
 import { ShareButtons } from "./ShareButtons";
 import { RiRobot2Line } from "react-icons/ri";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 type PromptCardProps = {
   id: number;
@@ -68,6 +69,7 @@ export const PromptCard = ({
 }: Prompt) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(prompt.isBookmarked);
   const router = useRouter();
@@ -78,24 +80,21 @@ export const PromptCard = ({
   const handleEdit = () => setIsEditing(true);
   const handleClose = () => setIsEditing(false);
 
-  const handleDelete = async () => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this prompt?"
-    );
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
     setIsDeleting(true);
-    if (!confirm) {
+    try {
+      await deletePrompt(prompt.id);
+      router.refresh();
+      toast.success("Prompt deleted successfully");
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      toast.error("Failed to delete prompt");
+    } finally {
       setIsDeleting(false);
-      return;
-    }
-    if (confirm) {
-      try {
-        await deletePrompt(prompt.id);
-        router.refresh();
-        toast.success("Prompt deleted successfully");
-        setIsDeleting(false);
-      } catch (error) {
-        toast.error("Failed to delete prompt");
-      }
     }
   };
 
@@ -166,7 +165,7 @@ export const PromptCard = ({
               <button
                 className="p-1.5 rounded-lg text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all duration-200 cursor-pointer"
                 type="button"
-                onClick={handleDelete}
+                onClick={handleDeleteClick}
                 title="Delete prompt"
               >
                 <FiTrash2
@@ -292,6 +291,15 @@ export const PromptCard = ({
           prompt={prompt}
         />
       )}
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Delete Prompt"
+        message="Are you sure you want to delete this prompt? This action cannot be undone."
+        isLoading={isDeleting}
+      />
     </div>
   );
 };
