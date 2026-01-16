@@ -146,7 +146,11 @@ export async function getPrompt(promptId: number) {
   };
 }
 
-export async function addComment(promptId: number, text: string) {
+export async function addComment(
+  promptId: number,
+  text: string,
+  parentId?: number
+) {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Unauthorized");
 
@@ -155,6 +159,7 @@ export async function addComment(promptId: number, text: string) {
       text,
       promptId,
       userId: session.user.id,
+      parentId,
     },
   });
   revalidatePath(`/prompt/${promptId}`);
@@ -191,6 +196,29 @@ export async function deleteComment(commentId: number, promptId: number) {
 
   await prisma.comment.delete({
     where: { id: commentId },
+  });
+  revalidatePath(`/prompt/${promptId}`);
+}
+
+export async function editComment(
+  commentId: number,
+  promptId: number,
+  text: string
+) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const comment = await prisma.comment.findUnique({
+    where: { id: commentId },
+  });
+
+  if (!comment || comment.userId !== session.user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.comment.update({
+    where: { id: commentId },
+    data: { text },
   });
   revalidatePath(`/prompt/${promptId}`);
 }

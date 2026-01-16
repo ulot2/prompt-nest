@@ -8,19 +8,42 @@ export async function CommentList({ promptId }: { promptId: number }) {
   const session = await auth();
   const userId = session?.user?.id;
 
+  const commentsById = new Map();
+  comments.forEach((comment) => {
+    commentsById.set(comment.id, { ...comment, replies: [] });
+  });
+
+  const rootComments: any[] = [];
+
+  comments.forEach((comment) => {
+    const enrichedComment = commentsById.get(comment.id);
+    if (comment.parentId) {
+      const parent = commentsById.get(comment.parentId);
+      if (parent) {
+        parent.replies.push(enrichedComment);
+      } else {
+        rootComments.push(enrichedComment);
+      }
+    } else {
+      rootComments.push(enrichedComment);
+    }
+  });
+
   return (
     <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
       <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         Discussion ({comments.length})
       </h3>
 
-      <div className="space-y-4 mb-8">
-        {comments.map((comment) => (
+      <div className="space-y-4 mb-12">
+        {rootComments.map((comment: any) => (
           <CommentItem
             key={comment.id}
             comment={comment}
             currentUserIds={userId}
             promptId={promptId}
+            replies={comment.replies}
+            depth={0}
           />
         ))}
 

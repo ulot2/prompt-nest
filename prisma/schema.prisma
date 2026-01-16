@@ -110,9 +110,13 @@ model Comment {
   id        Int      @id @default(autoincrement())
   text      String
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   userId    String
   promptId  Int
+  parentId  Int?
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  prompt Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt   Prompt    @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  children Comment[] @relation("CommentReplies")
 }

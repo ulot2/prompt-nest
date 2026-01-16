@@ -4,7 +4,17 @@ import { addComment } from "@/actions/actions";
 import { useRef, useTransition } from "react";
 import toast from "react-hot-toast";
 
-export function CommentForm({ promptId }: { promptId: number }) {
+export function CommentForm({
+  promptId,
+  parentId,
+  onSuccess,
+  autoFocus,
+}: {
+  promptId: number;
+  parentId?: number;
+  onSuccess?: () => void;
+  autoFocus?: boolean;
+}) {
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -14,9 +24,10 @@ export function CommentForm({ promptId }: { promptId: number }) {
 
     startTransition(async () => {
       try {
-        await addComment(promptId, text);
+        await addComment(promptId, text, parentId);
         formRef.current?.reset();
         toast.success("Comment added");
+        if (onSuccess) onSuccess();
       } catch (error) {
         toast.error("Failed to add comment. Make sure you are logged in.");
       }
@@ -31,6 +42,7 @@ export function CommentForm({ promptId }: { promptId: number }) {
           placeholder="What do you think about this prompt?"
           className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-y text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 transition-all"
           required
+          autoFocus={autoFocus}
         />
         <div className="absolute bottom-3 right-3">
           <button
