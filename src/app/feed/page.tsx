@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { Suspense } from "react";
 import { unstable_cache as cache } from "next/cache";
 import { getUniqueTags, getUniqueCategories } from "@/lib/filters";
+import { PixelGridBackground } from "@/components/PixelGridBackground";
 
 import { Navbar } from "@/components/Navbar";
 import { PromptList } from "@/components/PromptList";
@@ -12,6 +13,7 @@ import { FilterSidebar } from "@/components/FilterSidebar";
 import WebsiteDetails from "@/components/WebsiteDetails";
 import { SearchPrompt } from "@/components/SearchPrompt";
 import { MainPageSkeleton } from "@/components/MainPageSkeleton";
+import { Footer } from "@/components/Footer";
 
 export default async function FeedPage({
   searchParams,
@@ -19,7 +21,8 @@ export default async function FeedPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   return (
-    <div>
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <PixelGridBackground />
       <Suspense fallback={<MainPageSkeleton />}>
         <GetPrompts searchParams={searchParams} />
       </Suspense>
@@ -172,6 +175,7 @@ async function GetPrompts({
           totalPages={totalPages}
         />
       </div>
+      <Footer />
     </div>
   );
 }

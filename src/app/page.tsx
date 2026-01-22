@@ -1,6 +1,10 @@
 import { Navbar } from "@/components/Navbar";
 import { LandingHero } from "@/components/LandingHero";
+import { FeaturesSection } from "@/components/FeaturesSection";
 import WebsiteDetails from "@/components/WebsiteDetails";
+import { CallToAction } from "@/components/CallToAction";
+import { Footer } from "@/components/Footer";
+import { PixelGridBackground } from "@/components/PixelGridBackground";
 import { prisma } from "@/lib/db";
 import { auth } from "../auth";
 import { PromptList } from "@/components/PromptList";
@@ -12,6 +16,7 @@ import { MainPageSkeleton } from "@/components/MainPageSkeleton";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <PixelGridBackground />
       <Suspense fallback={<MainPageSkeleton />}>
         <LandingContent />
       </Suspense>
@@ -70,10 +75,12 @@ async function LandingContent() {
     <>
       <Navbar session={session} />
 
-      <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden pb-10">
+      <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
         <LandingHero session={session} />
 
         <WebsiteDetails totalPrompts={totalPrompts} totalUsers={totalUsers} />
+
+        <FeaturesSection />
 
         <section className="w-full max-w-[1200px] mx-auto px-4 md:px-6 py-16 md:py-24">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
@@ -91,7 +98,7 @@ async function LandingContent() {
               </h2>
               <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg">
                 Discover the most popular prompts voted by the community.
-                Don&apos;t just take our word for it—try them out.
+                Don&apos;t just take our word for it, copy and try them out.
               </p>
             </div>
 
@@ -113,7 +120,11 @@ async function LandingContent() {
             />
           </div>
         </section>
+
+        <CallToAction />
       </main>
+
+      <Footer />
     </>
   );
 }

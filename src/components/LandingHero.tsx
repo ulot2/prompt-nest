@@ -31,7 +31,7 @@ export const LandingHero = ({ session }: LandingHeroProps) => {
   };
 
   return (
-    <div className="relative w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-10 md:pt-32 md:pb-12 flex flex-col items-center justify-center overflow-hidden md:overflow-visible">
+    <div className="relative w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 md:pt-20 md:pb-12 flex flex-col items-center justify-center overflow-hidden md:overflow-visible">
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <motion.div
           animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
