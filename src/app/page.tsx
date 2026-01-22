@@ -1,17 +1,17 @@
-import { Navbar } from "@/components/Navbar";
-import { LandingHero } from "@/components/LandingHero";
-import { FeaturesSection } from "@/components/FeaturesSection";
-import WebsiteDetails from "@/components/WebsiteDetails";
-import { CallToAction } from "@/components/CallToAction";
-import { Footer } from "@/components/Footer";
-import { PixelGridBackground } from "@/components/PixelGridBackground";
+import { Navbar } from "@/components/layout/Navbar";
+import { LandingHero } from "@/components/landing/LandingHero";
+import { FeaturesSection } from "@/components/landing/FeaturesSection";
+import WebsiteDetails from "@/components/landing/WebsiteDetails";
+import { CallToAction } from "@/components/landing/CallToAction";
+import { Footer } from "@/components/layout/Footer";
+import { PixelGridBackground } from "@/components/landing/PixelGridBackground";
 import { prisma } from "@/lib/db";
 import { auth } from "../auth";
-import { PromptList } from "@/components/PromptList";
+import { PromptList } from "@/components/prompts/PromptList";
 import Link from "next/link";
 import { HiOutlineArrowRight, HiOutlineFire } from "react-icons/hi2";
 import { Suspense } from "react";
-import { MainPageSkeleton } from "@/components/MainPageSkeleton";
+import { MainPageSkeleton } from "@/components/skeletons/MainPageSkeleton";
 
 export default function LandingPage() {
   return (

@@ -1,10 +1,11 @@
-import { UserInfoHeader } from "@/components/UserInfoHeader";
+import { UserInfoHeader } from "@/components/profile/UserInfoHeader";
 import { Suspense } from "react";
-import { UserPromptsList } from "@/components/UserPromptsList";
-import { PromptListSkeleton } from "@/components/PromptListSkeleton";
-import { UserProfileCard } from "@/components/UserProfileCard";
-import { UserFilterSidebar } from "@/components/UserFilterSidebar";
-import { UserTabs } from "@/components/UserTabs";
+import { auth } from "@/auth";
+import { UserPromptsList } from "@/components/profile/UserPromptsList";
+import { PromptListSkeleton } from "@/components/skeletons/PromptListSkeleton";
+import { UserProfileCard } from "@/components/profile/UserProfileCard";
+import { UserFilterSidebar } from "@/components/filters/UserFilterSidebar";
+import { UserTabs } from "@/components/profile/UserTabs";
 
 export default function UserInfo({
   searchParams,

@@ -8,8 +8,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { format } from "path";
 import { formatTime } from "@/lib/utils";
-import { VotingButtons } from "./VotingButtons";
-import { ShareButtons } from "./ShareButtons";
+import { VotingButtons } from "@/components/prompts/VotingButtons";
+import { ShareButtons } from "@/components/shared/ShareButtons";
 
 interface PromptModalProps {
   isOpen: boolean;

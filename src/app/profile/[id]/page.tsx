@@ -2,16 +2,18 @@
 
 import { auth } from "@/auth";
 import Image from "next/image";
-import { ProfilePageSkeleton } from "@/components/ProfilePageSkeleton";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ProfilePageSkeleton } from "@/components/skeletons/ProfilePageSkeleton";
+import Link from "next/link";
+import { HiOutlineUserCircle } from "react-icons/hi2";
 import { FaRegFileAlt } from "react-icons/fa";
 import { prisma } from "@/lib/db";
-import { PromptList } from "@/components/PromptList";
-import { Suspense } from "react";
-import { FilterSidebar } from "@/components/FilterSidebar";
+import { PromptList } from "@/components/prompts/PromptList";
+
+import { FilterSidebar } from "@/components/filters/FilterSidebar";
 import { getUniqueCategories, getUniqueTags } from "@/lib/filters";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import { notFound } from "next/navigation";
+import { Suspense } from "react"; // Re-added Suspense as it's used in the component
 
 export default async function UserProfile({
   params,

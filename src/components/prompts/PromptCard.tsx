@@ -4,15 +4,14 @@ import React, { useState } from "react";
 import { VotingButtons } from "./VotingButtons";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { HiOutlineSparkles, HiOutlineTag } from "react-icons/hi2";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
-import { deletePrompt, editPrompt } from "@/actions/actions";
+import { deletePrompt } from "@/actions/actions";
 import toast from "react-hot-toast";
-import { EditPrompt } from "./EditPromptModal";
+import { EditPrompt } from "@/components/modals/EditPromptModal";
 import { useRouter } from "next/dist/client/components/navigation";
-import { ShareButtons } from "./ShareButtons";
+import { ShareButtons } from "@/components/shared/ShareButtons";
 import { RiRobot2Line } from "react-icons/ri";
-import { ConfirmationModal } from "./ConfirmationModal";
+import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 
 type PromptCardProps = {
   id: number;
@@ -124,7 +123,7 @@ export const PromptCard = ({
       toast.success(
         newStatus
           ? "Prompt saved to bookmarks"
-          : "Prompt removed from bookmarks"
+          : "Prompt removed from bookmarks",
       );
       router.refresh();
     } catch (error) {

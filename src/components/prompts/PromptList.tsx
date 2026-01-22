@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { PromptCard } from "./PromptCard";
-import { PromptModal } from "./PromptModal";
-import { Pagination } from "./Pagination";
+import { PromptModal } from "@/components/modals/PromptModal";
+import { Pagination } from "@/components/shared/Pagination";
 import { motion } from "motion/react";
 import { HiOutlineSparkles } from "react-icons/hi2";
 

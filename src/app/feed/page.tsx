@@ -5,15 +5,15 @@ import { prisma } from "@/lib/db";
 import { Suspense } from "react";
 import { unstable_cache as cache } from "next/cache";
 import { getUniqueTags, getUniqueCategories } from "@/lib/filters";
-import { PixelGridBackground } from "@/components/PixelGridBackground";
+import { PixelGridBackground } from "@/components/landing/PixelGridBackground";
 
-import { Navbar } from "@/components/Navbar";
-import { PromptList } from "@/components/PromptList";
-import { FilterSidebar } from "@/components/FilterSidebar";
-import WebsiteDetails from "@/components/WebsiteDetails";
-import { SearchPrompt } from "@/components/SearchPrompt";
-import { MainPageSkeleton } from "@/components/MainPageSkeleton";
-import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/layout/Navbar";
+import { PromptList } from "@/components/prompts/PromptList";
+import { FilterSidebar } from "@/components/filters/FilterSidebar";
+import WebsiteDetails from "@/components/landing/WebsiteDetails";
+import { SearchPrompt } from "@/components/prompts/SearchPrompt";
+import { MainPageSkeleton } from "@/components/skeletons/MainPageSkeleton";
+import { Footer } from "@/components/layout/Footer";
 
 export default async function FeedPage({
   searchParams,

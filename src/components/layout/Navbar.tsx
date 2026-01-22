@@ -10,8 +10,8 @@ import {
   IoIosLogOut,
 } from "react-icons/io";
 import { PiFeatherFill } from "react-icons/pi";
-import { SubmitPrompt } from "./SubmitPrompt";
-import { ThemeToggle } from "./ThemeToggle";
+import { SubmitPrompt } from "@/components/prompts/SubmitPrompt";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useState } from "react";
 import { Session } from "next-auth";
 import Image from "next/image";

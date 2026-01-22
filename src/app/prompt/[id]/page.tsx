@@ -1,18 +1,18 @@
 import { getPrompt } from "@/actions/actions";
 import { auth } from "@/auth";
-import { CommentList } from "@/components/CommentList";
-import { CopyButton } from "@/components/CopyButton";
-import { ShareButtons } from "@/components/ShareButtons";
-import { VotingButtons } from "@/components/VotingButtons";
+import { CommentList } from "@/components/comments/CommentList";
+import { CopyButton } from "@/components/shared/CopyButton";
+import { ShareButtons } from "@/components/shared/ShareButtons";
+import { VotingButtons } from "@/components/prompts/VotingButtons";
 import { formatTime } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { PromptDetailsSkeleton } from "@/components/PromptDetailsSkeleton";
+import { PromptDetailsSkeleton } from "@/components/skeletons/PromptDetailsSkeleton";
 import { Suspense } from "react";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/layout/Navbar";
 
 // Category styling helper (consistent with PromptCard)
 const getCategoryClasses = (category: string) => {

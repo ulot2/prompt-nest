@@ -1,7 +1,7 @@
 "use client";
 
-import { Login } from "@/components/Login";
-import { Signup } from "@/components/Signup";
+import { Login } from "@/components/auth/Login";
+import { Signup } from "@/components/auth/Signup";
 import Link from "next/link";
 import { useState } from "react";
 

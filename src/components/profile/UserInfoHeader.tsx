@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { IoIosArrowRoundBack, IoIosAdd } from "react-icons/io";
-import { SubmitPrompt } from "./SubmitPrompt";
+import { SubmitPrompt } from "@/components/prompts/SubmitPrompt";
 
 export const UserInfoHeader = () => {
   const router = useRouter();

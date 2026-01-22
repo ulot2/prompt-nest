@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { PromptList } from "@/components/PromptList";
+import { PromptList } from "@/components/prompts/PromptList";
 import { auth } from "@/auth";
 import { getUniqueCategories, getUniqueTags } from "@/lib/filters";
 
