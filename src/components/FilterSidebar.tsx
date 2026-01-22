@@ -11,7 +11,7 @@ import {
 } from "react-icons/fi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { motion } from "motion/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 type FilterSidebarProps = {
   categories: string[];
@@ -21,6 +21,7 @@ type FilterSidebarProps = {
 export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSortChange = (sortValue: string) => {
@@ -33,7 +34,7 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
 
   const handleCheckboxChange = (
     filterType: "category" | "tag",
-    value: string
+    value: string,
   ) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -55,7 +56,7 @@ export function FilterSidebar({ categories, tags }: FilterSidebarProps) {
   };
 
   const handleClearAll = () => {
-    router.push("/");
+    router.push(pathname);
     setIsOpen(false);
   };
 

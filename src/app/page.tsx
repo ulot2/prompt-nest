@@ -1,116 +1,35 @@
-"use server";
-
-import { auth } from "@/auth";
-import { prisma } from "@/lib/db";
-import { Suspense } from "react";
-import { unstable_cache as cache } from "next/cache";
-import { getUniqueTags, getUniqueCategories } from "@/lib/filters";
-
 import { Navbar } from "@/components/Navbar";
-import { PromptList } from "@/components/PromptList";
-import { FilterSidebar } from "@/components/FilterSidebar";
+import { LandingHero } from "@/components/LandingHero";
 import WebsiteDetails from "@/components/WebsiteDetails";
-import { SearchPrompt } from "@/components/SearchPrompt";
+import { prisma } from "@/lib/db";
+import { auth } from "../auth";
+import { PromptList } from "@/components/PromptList";
+import Link from "next/link";
+import { HiOutlineArrowRight, HiOutlineFire } from "react-icons/hi2";
+import { Suspense } from "react";
 import { MainPageSkeleton } from "@/components/MainPageSkeleton";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export default function LandingPage() {
   return (
-    <div>
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Suspense fallback={<MainPageSkeleton />}>
-        <GetPrompts searchParams={searchParams} />
+        <LandingContent />
       </Suspense>
     </div>
   );
 }
 
-const promptPerPage = 10;
-
-const getTotalPrompts = cache(
-  async () => prisma.prompt.count(),
-  ["promptCount"],
-  { revalidate: 300 }
-);
-
-const getTotalUsers = cache(async () => prisma.user.count(), ["userCount"], {
-  revalidate: 300,
-});
-
-async function GetPrompts({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const params = await searchParams;
-
-  const sort = (params.sort as string) || "newest";
-  const categories = params.category
-    ? (params.category as string).split(",")
-    : [];
-
-  const tags = params.tag ? (params.tag as string).split(",") : [];
-
-  const searchQuery = (params.search as string) || "";
-
-  const whereClause: any = {};
-
-  if (categories.length > 0) {
-    whereClause.category = { in: categories };
-  }
-
-  if (tags.length > 0) {
-    whereClause.tags = {
-      hasSome: tags,
-    };
-  }
-
-  if (searchQuery) {
-    whereClause.OR = [
-      {
-        title: {
-          contains: searchQuery,
-          mode: "insensitive",
-        },
-      },
-      {
-        description: {
-          contains: searchQuery,
-          mode: "insensitive",
-        },
-      },
-      {
-        tags: {
-          hasSome: [searchQuery],
-        },
-      },
-    ];
-  }
-
-  let orderByClause: any = { createdAt: "desc" };
-
-  if (sort === "trending") {
-    orderByClause = { likes: "desc" };
-  } else if (sort === "toprated") {
-    orderByClause = { dislikes: "desc" };
-  }
-
+async function LandingContent() {
   const session = await auth();
   const userId = session?.user?.id;
 
-  const totalUsers = await getTotalUsers();
-  const totalPromptsCount = await getTotalPrompts();
+  const totalPrompts = await prisma.prompt.count();
+  const totalUsers = await prisma.user.count();
 
-  const page = Number(params.page) || 1;
-
-  const totalPrompts = await prisma.prompt.count({
-    where: whereClause,
-  });
-  const prompts = await prisma.prompt.findMany({
-    where: whereClause,
-    orderBy: orderByClause,
+  // Fetch trending prompts
+  const trendingPrompts = await prisma.prompt.findMany({
+    orderBy: { likes: "desc" },
+    take: 4,
     select: {
       likes: true,
       dislikes: true,
@@ -133,14 +52,11 @@ async function GetPrompts({
         select: { id: true },
       },
     },
-    take: promptPerPage,
-    skip: (page - 1) * promptPerPage,
   });
-  const totalPages = Math.ceil(totalPrompts / promptPerPage);
 
-  type PromptFromDB = (typeof prompts)[0];
+  type PromptFromDB = (typeof trendingPrompts)[0];
 
-  const promptsWithStatus = prompts.map((prompt: PromptFromDB) => ({
+  const promptsWithStatus = trendingPrompts.map((prompt: PromptFromDB) => ({
     ...prompt,
     userVoteStatus:
       Array.isArray(prompt.votes) && prompt.votes.length > 0
@@ -150,28 +66,54 @@ async function GetPrompts({
       Array.isArray(prompt.bookmarks) && prompt.bookmarks.length > 0,
   }));
 
-  const availableCategories = (await getUniqueCategories()) as string[];
-  const availableTags = (await getUniqueTags()) as string[];
-
   return (
-    <div className="">
+    <>
       <Navbar session={session} />
-      <SearchPrompt resultsCount={totalPrompts} />
 
-      <WebsiteDetails
-        totalUsers={totalUsers}
-        totalPrompts={totalPromptsCount}
-      />
-      <div className="flex flex-col lg:flex-row relative max-w-[1200px] mx-auto px-4 md:px-0">
-        <FilterSidebar categories={availableCategories} tags={availableTags} />
+      <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden pb-10">
+        <LandingHero session={session} />
 
-        <PromptList
-          session={session}
-          prompts={promptsWithStatus}
-          currentPage={page}
-          totalPages={totalPages}
-        />
-      </div>
-    </div>
+        <WebsiteDetails totalPrompts={totalPrompts} totalUsers={totalUsers} />
+
+        <section className="w-full max-w-[1200px] mx-auto px-4 md:px-6 py-16 md:py-24">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                  <HiOutlineFire className="text-orange-600 dark:text-orange-400 text-xl" />
+                </div>
+                <span className="text-orange-600 dark:text-orange-400 font-semibold tracking-wide uppercase text-sm">
+                  Trending Now
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+                Top Rated Prompts
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg">
+                Discover the most popular prompts voted by the community.
+                Don&apos;t just take our word for it—try them out.
+              </p>
+            </div>
+
+            <Link
+              href="/feed?sort=trending"
+              className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold hover:gap-3 transition-all duration-300 group"
+            >
+              View all trending
+              <HiOutlineArrowRight className="text-lg group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+
+          <div className="relative">
+            <PromptList
+              session={session}
+              prompts={promptsWithStatus}
+              currentPage={1}
+              totalPages={1}
+            />
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
