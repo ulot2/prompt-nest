@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "PromptNest",
-  description: "A hub for AI prompts",
+  description: "A community hub for AI prompts",
 };
 
 export default function RootLayout({
