@@ -117,6 +117,7 @@ export async function UserPromptsList({ searchParams }: UserPromptsListProps) {
       prompts={promptsWithStatus}
       currentPage={page}
       totalPages={totalPages}
+      mode={filter === "saved" ? "saved" : "created"}
     />
   );
 }

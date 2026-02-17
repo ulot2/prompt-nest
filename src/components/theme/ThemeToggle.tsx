@@ -77,7 +77,7 @@ export function ThemeToggle() {
                     "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     theme === item.value
                       ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200",
                   )}
                 >
                   <item.icon className="text-lg" />
